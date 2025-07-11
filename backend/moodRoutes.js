@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const { Mood } = require("./models");
+const aiService = require("./services/aiService");
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -21,17 +22,14 @@ router.post("/", authenticateToken, async (req, res) => {
     const userId = req.user.userId;
     if (!mood || !journal)
       return res.status(400).json({ error: "Mood and journal required" });
+    
     const moodEntry = new Mood({ userId, mood, journal });
     await moodEntry.save();
 
-    let insight = "Keep logging to see trends!";
-    if (
-      journal &&
-      typeof journal === "string" &&
-      journal.toLowerCase().includes("stress")
-    ) {
-      insight = "You mentioned stress. Try a breathing exercise.";
-    }
+    // Generate AI-powered insight based on mood and journal content
+    const insight = await aiService.generateMoodInsight(userId, mood, journal);
+
+    console.log(`🤖 AI Insight generated for user ${userId}: ${insight.substring(0, 50)}...`);
 
     res
       .status(201)

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Goal } = require("./models");
 const { authenticateToken } = require("./authMiddleware");
+const aiService = require("./services/aiService");
 
 // Apply authentication middleware to all goal routes
 router.use(authenticateToken);
@@ -20,7 +21,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Create a new goal with suggestions
+// Create a new goal with AI-powered personalized suggestions
 router.post("/", async (req, res) => {
   try {
     const { goal } = req.body;
@@ -29,86 +30,42 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Goal is required" });
     }
 
-    const goalLower = goal.toLowerCase();
-    let suggestions = {
-      exercise: "",
-      appAction: "",
-      message: "",
-    };
+    // Generate personalized suggestions using AI service
+    const suggestions = await aiService.generatePersonalizedSuggestions(
+      req.user.userId,
+      goal
+    );
 
-    // AI-like suggestions based on goal keywords
-    if (goalLower.includes("stress") || goalLower.includes("anxiety")) {
-      suggestions.exercise =
-        "Try a 5-minute breathing exercise: Inhale for 4 counts, hold for 4, exhale for 6. Repeat 10 times.";
-      suggestions.appAction =
-        "Log your mood to track stress patterns and identify triggers.";
-      suggestions.message =
-        "Stress management is a journey. Start with small, consistent practices.";
-    } else if (goalLower.includes("sleep") || goalLower.includes("insomnia")) {
-      suggestions.exercise =
-        "Progressive muscle relaxation: Tense each muscle group for 5 seconds, then relax completely.";
-      suggestions.appAction =
-        "Use the mindfulness tab for guided meditation before bed.";
-      suggestions.message = "Good sleep hygiene starts with a calm mind.";
-    } else if (goalLower.includes("depression") || goalLower.includes("sad")) {
-      suggestions.exercise =
-        "Take a 10-minute walk outside. Focus on 3 things you can see, hear, and feel.";
-      suggestions.appAction =
-        "Check your mood history to see patterns and celebrate small wins.";
-      suggestions.message =
-        "Every step forward, no matter how small, is progress.";
-    } else if (
-      goalLower.includes("focus") ||
-      goalLower.includes("concentration")
-    ) {
-      suggestions.exercise =
-        "Mindful observation: Pick an object and study it for 2 minutes, noticing every detail.";
-      suggestions.appAction =
-        "Set a daily mindfulness goal in your profile and track your progress.";
-      suggestions.message =
-        "Focus is like a muscle - it gets stronger with practice.";
-    } else if (
-      goalLower.includes("confidence") ||
-      goalLower.includes("self-esteem")
-    ) {
-      suggestions.exercise =
-        "Write down 3 things you did well today, no matter how small.";
-      suggestions.appAction =
-        "Use the community tab to connect with others on similar journeys.";
-      suggestions.message = "You are capable of more than you know.";
-    } else {
-      suggestions.exercise =
-        "Start with a simple 3-minute meditation: Sit comfortably and focus on your breath.";
-      suggestions.appAction =
-        "Log your mood daily to build awareness of your emotional patterns.";
-      suggestions.message =
-        "Every goal starts with a single step. You've got this!";
-    }
-
-    // Extract tags from goal
+    // Extract tags from goal analysis
     const tags = [];
-    if (goalLower.includes("stress") || goalLower.includes("anxiety"))
-      tags.push("stress");
-    if (goalLower.includes("sleep") || goalLower.includes("insomnia"))
-      tags.push("sleep");
-    if (goalLower.includes("depression") || goalLower.includes("sad"))
-      tags.push("depression");
-    if (goalLower.includes("focus") || goalLower.includes("concentration"))
-      tags.push("focus");
-    if (goalLower.includes("confidence") || goalLower.includes("self-esteem"))
-      tags.push("confidence");
+    const analysis = suggestions.analysis.goalAnalysis;
+    
+    if (analysis.stress > 0) tags.push("stress");
+    if (analysis.sleep > 0) tags.push("sleep");
+    if (analysis.depression > 0) tags.push("depression");
+    if (analysis.anxiety > 0) tags.push("anxiety");
+    if (analysis.confidence > 0) tags.push("confidence");
 
     const newGoal = new Goal({
       userId: req.user.userId,
       goal,
-      suggestions,
+      suggestions: {
+        exercise: suggestions.exercise,
+        appAction: suggestions.appAction,
+        message: suggestions.message
+      },
       tags,
     });
 
     await newGoal.save();
 
-    console.log(`📝 New goal created: ${goal} for user ${req.user.userId}`);
-    res.status(201).json({ goal: newGoal });
+    console.log(`📝 New AI-powered goal created: ${goal} for user ${req.user.userId}`);
+    console.log(`🤖 AI Analysis: Primary concern - ${suggestions.analysis.primaryConcern}`);
+    
+    res.status(201).json({ 
+      goal: newGoal,
+      aiAnalysis: suggestions.analysis
+    });
   } catch (error) {
     console.error("Error creating goal:", error);
     res.status(500).json({ error: "Failed to create goal" });
