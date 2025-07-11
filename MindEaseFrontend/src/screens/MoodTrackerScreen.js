@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5000';
+import { API_BASE_URL, ENDPOINTS, getAuthHeaders } from '../config/api';
 
 const MoodTrackerScreen = () => {
   const [mood, setMood] = useState(null);
@@ -26,8 +25,8 @@ const MoodTrackerScreen = () => {
 
   const fetchMoodHistory = async (token) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/mood/history`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get(`${API_BASE_URL}${ENDPOINTS.MOOD_HISTORY}`, {
+        headers: getAuthHeaders(token),
       });
       setHistory(response.data.history);
     } catch (error) {
@@ -40,9 +39,9 @@ const MoodTrackerScreen = () => {
     setMood(selectedMood);
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/mood`,
+        `${API_BASE_URL}${ENDPOINTS.MOOD_LOG}`,
         { mood: selectedMood, journal },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: getAuthHeaders(token) }
       );
       setInsights(response.data.insight);
       fetchMoodHistory(token);
@@ -54,8 +53,8 @@ const MoodTrackerScreen = () => {
 
   const handleDeleteMood = async (moodId) => {
     try {
-      await axios.delete(`${API_BASE_URL}/mood/${moodId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      await axios.delete(`${API_BASE_URL}${ENDPOINTS.MOOD_DELETE(moodId)}`, {
+        headers: getAuthHeaders(token),
       });
       Alert.alert('Success', 'Mood entry deleted');
       fetchMoodHistory(token);

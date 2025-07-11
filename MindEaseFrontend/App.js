@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from './HomeScreen';
-import MoodTrackerScreen from './MoodTrackerScreen';
-import MindfulnessScreen from './MindfulnessScreen';
-import CommunityHubScreen from './CommunityHubScreen';
-import ProfileScreen from './ProfileScreen';
-import LoginScreen from './LoginScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import MoodTrackerScreen from './src/screens/MoodTrackerScreen';
+import MindfulnessScreen from './src/screens/MindfulnessScreen';
+import CommunityHubScreen from './src/screens/CommunityHubScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import LoginScreen from './src/screens/LoginScreen';
 
 const Tab = createBottomTabNavigator();
 
