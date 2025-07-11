@@ -7,26 +7,31 @@ const API_CONFIG = {
     baseURL: 'http://localhost:5000',
     timeout: 10000,
   },
-  
+
   // Production (update with your actual production URL)
   production: {
     baseURL: 'https://your-production-api.com',
     timeout: 15000,
   },
-  
+
   // Test
   test: {
     baseURL: 'http://localhost:5000',
     timeout: 5000,
-  }
+  },
 };
 
 // Get current environment
 const getEnvironment = () => {
-  if (__DEV__) {
+  // For Jest tests
+  if (process.env.NODE_ENV === 'test') {
+    return 'test';
+  }
+  // For React Native development
+  if (typeof __DEV__ !== 'undefined' && __DEV__) {
     return 'development';
   }
-  // Add logic to detect production vs test
+  // Default to development
   return 'development';
 };
 
@@ -39,40 +44,28 @@ export const API_TIMEOUT = currentConfig.timeout;
 // API Endpoints
 export const ENDPOINTS = {
   // Authentication
-  AUTH: '/auth',
-  REGISTER: '/register',
   LOGIN: '/login',
-  
-  // User Management
-  USER_PROFILE: '/user',
-  HEALTH_CHECK: '/health',
-  
+  REGISTER: '/register',
+
   // Mood Tracking
-  MOOD_LOG: '/mood',
-  MOOD_HISTORY: '/mood/history',
-  MOOD_DELETE: (id) => `/mood/${id}`,
-  
+  MOODS: '/moods',
+
   // Goals & Suggestions
   GOALS: '/goals',
-  GOAL_FEEDBACK: (id) => `/goals/${id}/feedback`,
-  GOAL_COMPLETE: (id) => `/goals/${id}/complete`,
-  GOAL_DELETE: (id) => `/goals/${id}`,
-  GOAL_STATS: '/goals/stats',
-  
+
   // Payments
   CHECKOUT_SESSION: '/payment/create-checkout-session',
   PORTAL_SESSION: '/payment/create-portal-session',
   CANCEL_SUBSCRIPTION: '/payment/cancel-subscription',
-  PAYMENT_WEBHOOK: '/payment/webhook',
 };
 
 // Helper function to build full URLs
-export const buildURL = (endpoint) => `${API_BASE_URL}${endpoint}`;
+export const buildURL = endpoint => `${API_BASE_URL}${endpoint}`;
 
 // Helper function to get API headers with auth
-export const getAuthHeaders = (token) => ({
+export const getAuthHeaders = token => ({
   'Content-Type': 'application/json',
-  'Authorization': `Bearer ${token}`,
+  Authorization: `Bearer ${token}`,
 });
 
 export default {
@@ -81,4 +74,4 @@ export default {
   ENDPOINTS,
   buildURL,
   getAuthHeaders,
-}; 
+};

@@ -80,12 +80,14 @@
 ## Step 6: Test Configuration
 
 ### Test API Keys:
+
 ```powershell
 cd backend
 node test-stripe.js
 ```
 
 ### Test Webhook (using Stripe CLI):
+
 1. Install Stripe CLI: https://stripe.com/docs/stripe-cli
 2. Login: `stripe login`
 3. Forward webhooks: `stripe listen --forward-to localhost:5000/payment/webhook`
@@ -93,6 +95,7 @@ node test-stripe.js
 ## Environment Variables Summary
 
 Update `backend/config.env`:
+
 ```
 # Stripe Configuration
 STRIPE_SECRET_KEY=sk_test_your_secret_key_here
@@ -102,7 +105,9 @@ STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
 ```
 
 ## Next Steps
+
 After Stripe is configured:
+
 1. Test the API keys and webhooks
 2. Proceed to Step 5: Backend API Development
-3. Implement payment endpoints in your Express server 
+3. Implement payment endpoints in your Express server

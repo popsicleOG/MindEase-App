@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Linking,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5000';
+import { API_BASE_URL, ENDPOINTS, getAuthHeaders } from '../config/api';
 
 const ProfileScreen = () => {
   const [subscriptionStatus, setSubscriptionStatus] = useState('free');
@@ -26,9 +32,9 @@ const ProfileScreen = () => {
   const handleUpgrade = async () => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/payment/create-checkout-session`,
+        `${API_BASE_URL}${ENDPOINTS.CHECKOUT_SESSION}`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: getAuthHeaders(token) },
       );
       Linking.openURL(response.data.url);
     } catch (error) {
@@ -44,9 +50,9 @@ const ProfileScreen = () => {
   const handleManageSubscription = async () => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/payment/create-portal-session`,
+        `${API_BASE_URL}${ENDPOINTS.PORTAL_SESSION}`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: getAuthHeaders(token) },
       );
       Linking.openURL(response.data.url);
     } catch (error) {
@@ -62,9 +68,9 @@ const ProfileScreen = () => {
   const handleCancelSubscription = async () => {
     try {
       await axios.post(
-        `${API_BASE_URL}/payment/cancel-subscription`,
+        `${API_BASE_URL}${ENDPOINTS.CANCEL_SUBSCRIPTION}`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: getAuthHeaders(token) },
       );
       setSubscriptionStatus('free');
       await AsyncStorage.setItem('subscriptionStatus', 'free');
@@ -82,7 +88,9 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Profile</Text>
-      <Text style={styles.status}>Subscription Status: {subscriptionStatus.toUpperCase()}</Text>
+      <Text style={styles.status}>
+        Subscription Status: {subscriptionStatus.toUpperCase()}
+      </Text>
       {subscriptionStatus === 'free' && (
         <TouchableOpacity style={styles.upgradeButton} onPress={handleUpgrade}>
           <Text style={styles.buttonText}>Upgrade to Premium</Text>
@@ -90,10 +98,16 @@ const ProfileScreen = () => {
       )}
       {subscriptionStatus === 'premium' && (
         <>
-          <TouchableOpacity style={styles.manageButton} onPress={handleManageSubscription}>
+          <TouchableOpacity
+            style={styles.manageButton}
+            onPress={handleManageSubscription}
+          >
             <Text style={styles.buttonText}>Manage Subscription</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={handleCancelSubscription}>
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={handleCancelSubscription}
+          >
             <Text style={styles.buttonText}>Cancel Subscription</Text>
           </TouchableOpacity>
         </>
@@ -103,13 +117,46 @@ const ProfileScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#E6F0FA', justifyContent: 'center' },
-  header: { fontSize: 28, fontWeight: 'bold', color: '#1A3C6E', marginBottom: 20, textAlign: 'center' },
-  status: { fontSize: 18, color: '#1A3C6E', marginBottom: 20, textAlign: 'center' },
-  upgradeButton: { backgroundColor: '#1A3C6E', padding: 15, borderRadius: 10, alignItems: 'center', marginBottom: 10 },
-  manageButton: { backgroundColor: '#3A6EAA', padding: 15, borderRadius: 10, alignItems: 'center', marginBottom: 10 },
-  cancelButton: { backgroundColor: '#AA3A3A', padding: 15, borderRadius: 10, alignItems: 'center' },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#E6F0FA',
+    justifyContent: 'center',
+  },
+  header: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#1A3C6E',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  status: {
+    fontSize: 18,
+    color: '#1A3C6E',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  upgradeButton: {
+    backgroundColor: '#1A3C6E',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  manageButton: {
+    backgroundColor: '#3A6EAA',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  cancelButton: {
+    backgroundColor: '#AA3A3A',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
   buttonText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' },
 });
 
-export default ProfileScreen; 
+export default ProfileScreen;

@@ -20,7 +20,11 @@ const App = () => {
           tabBarInactiveTintColor: '#A3BFFA',
         }}
       >
-        <Tab.Screen name="Login" component={LoginScreen} options={{ tabBarStyle: { display: 'none' } }} />
+        <Tab.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ tabBarStyle: { display: 'none' } }}
+        />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="MoodTracker" component={MoodTrackerScreen} />
         <Tab.Screen name="Mindfulness" component={MindfulnessScreen} />
@@ -31,4 +35,4 @@ const App = () => {
   );
 };
 
-export default App; 
+export default App;

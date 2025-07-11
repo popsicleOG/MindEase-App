@@ -1,11 +1,13 @@
 # React Native Codebase Consolidation Plan
 
 ## 🎯 Goal
+
 Consolidate scattered React Native files into a single, well-organized frontend structure.
 
 ## 📊 Current State Analysis
 
 ### Root Directory Files (To Migrate)
+
 - `App.js` - Main app entry point
 - `HomeScreen.js` - Home screen component
 - `LoginScreen.js` - Authentication screen
@@ -15,6 +17,7 @@ Consolidate scattered React Native files into a single, well-organized frontend 
 - `ProfileScreen.js` - User profile management
 
 ### MindEaseFrontend Directory
+
 - Complete React Native project structure
 - Proper package.json and dependencies
 - Android/iOS native configurations
@@ -23,11 +26,13 @@ Consolidate scattered React Native files into a single, well-organized frontend 
 ## 🚀 Migration Strategy
 
 ### Phase 1: File Migration
+
 1. **Move root screen files to MindEaseFrontend/src/screens/**
+
    ```bash
    # Create screens directory
    mkdir -p MindEaseFrontend/src/screens
-   
+
    # Move files
    mv HomeScreen.js MindEaseFrontend/src/screens/
    mv LoginScreen.js MindEaseFrontend/src/screens/
@@ -43,19 +48,23 @@ Consolidate scattered React Native files into a single, well-organized frontend 
    ```
 
 ### Phase 2: Import Path Updates
+
 Update all import statements to use the new centralized API config:
 
 **Before:**
+
 ```javascript
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = "http://localhost:5000";
 ```
 
 **After:**
+
 ```javascript
-import { API_BASE_URL, ENDPOINTS, buildURL } from './src/config/api';
+import { API_BASE_URL, ENDPOINTS, buildURL } from "./src/config/api";
 ```
 
 ### Phase 3: Directory Structure
+
 ```
 MindEaseFrontend/
 ├── src/
@@ -81,6 +90,7 @@ MindEaseFrontend/
 ```
 
 ### Phase 4: Cleanup
+
 1. Remove duplicate files from root directory
 2. Update documentation references
 3. Update CI/CD configurations
@@ -98,18 +108,21 @@ MindEaseFrontend/
 ## 🛠️ Implementation Steps
 
 ### Step 1: Backup Current State
+
 ```bash
 git add .
 git commit -m "backup: current state before consolidation"
 ```
 
 ### Step 2: Create New Directory Structure
+
 ```bash
 cd MindEaseFrontend
 mkdir -p src/screens src/config src/components src/utils src/services
 ```
 
 ### Step 3: Migrate Files
+
 ```bash
 # From project root
 cp HomeScreen.js MindEaseFrontend/src/screens/
@@ -122,9 +135,11 @@ cp App.js MindEaseFrontend/
 ```
 
 ### Step 4: Update Imports
+
 Replace hard-coded API URLs with centralized config imports.
 
 ### Step 5: Test Everything
+
 ```bash
 cd MindEaseFrontend
 npm test
@@ -132,6 +147,7 @@ npx react-native run-android  # or run-ios
 ```
 
 ### Step 6: Cleanup
+
 ```bash
 # From project root
 rm HomeScreen.js LoginScreen.js MoodTrackerScreen.js MindfulnessScreen.js CommunityHubScreen.js ProfileScreen.js App.js
@@ -160,4 +176,4 @@ rm HomeScreen.js LoginScreen.js MoodTrackerScreen.js MindfulnessScreen.js Commun
 5. App runs successfully on both platforms
 6. Documentation updated to reflect new structure
 
-This consolidation will eliminate confusion and create a maintainable, professional codebase structure. 
+This consolidation will eliminate confusion and create a maintainable, professional codebase structure.

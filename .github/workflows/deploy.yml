@@ -1,0 +1,99 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm install
+        
+    - name: Run tests
+      run: npm test
+        
+    - name: Deploy to staging
+      run: |
+        echo "🚀 Deploying to staging environment..."
+        echo "📦 Build artifacts would be deployed here"
+        echo "🔗 Staging URL: https://staging-mindease.herokuapp.com"
+        # Add your staging deployment commands here
+        # Example for Heroku:
+        # heroku container:push web -a mindease-staging
+        # heroku container:release web -a mindease-staging
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm install
+        
+    - name: Run tests
+      run: npm test
+        
+    - name: Deploy to production
+      run: |
+        echo "🚀 Deploying to production environment..."
+        echo "📦 Build artifacts would be deployed here"
+        echo "🔗 Production URL: https://mindease.herokuapp.com"
+        # Add your production deployment commands here
+        # Example for Heroku:
+        # heroku container:push web -a mindease-production
+        # heroku container:release web -a mindease-production
+
+  notify:
+    name: Notify Team
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+    
+    steps:
+    - name: Notify on success
+      if: needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success'
+      run: |
+        echo "✅ Deployment successful!"
+        echo "📧 Sending success notification..."
+        # Add notification logic here (Slack, email, etc.)
+        
+    - name: Notify on failure
+      if: needs.deploy-staging.result == 'failure' || needs.deploy-production.result == 'failure'
+      run: |
+        echo "❌ Deployment failed!"
+        echo "📧 Sending failure notification..."
+        # Add notification logic here (Slack, email, etc.) 

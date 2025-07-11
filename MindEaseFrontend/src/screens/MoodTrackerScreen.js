@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Alert,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { API_BASE_URL, ENDPOINTS, getAuthHeaders } from '../config/api';
@@ -23,11 +31,14 @@ const MoodTrackerScreen = () => {
     loadToken();
   }, []);
 
-  const fetchMoodHistory = async (token) => {
+  const fetchMoodHistory = async token => {
     try {
-      const response = await axios.get(`${API_BASE_URL}${ENDPOINTS.MOOD_HISTORY}`, {
-        headers: getAuthHeaders(token),
-      });
+      const response = await axios.get(
+        `${API_BASE_URL}${ENDPOINTS.MOOD_HISTORY}`,
+        {
+          headers: getAuthHeaders(token),
+        },
+      );
       setHistory(response.data.history);
     } catch (error) {
       console.error('Error fetching mood history:', error);
@@ -35,13 +46,13 @@ const MoodTrackerScreen = () => {
     }
   };
 
-  const handleMoodSelect = async (selectedMood) => {
+  const handleMoodSelect = async selectedMood => {
     setMood(selectedMood);
     try {
       const response = await axios.post(
         `${API_BASE_URL}${ENDPOINTS.MOOD_LOG}`,
         { mood: selectedMood, journal },
-        { headers: getAuthHeaders(token) }
+        { headers: getAuthHeaders(token) },
       );
       setInsights(response.data.insight);
       fetchMoodHistory(token);
@@ -51,7 +62,7 @@ const MoodTrackerScreen = () => {
     }
   };
 
-  const handleDeleteMood = async (moodId) => {
+  const handleDeleteMood = async moodId => {
     try {
       await axios.delete(`${API_BASE_URL}${ENDPOINTS.MOOD_DELETE(moodId)}`, {
         headers: getAuthHeaders(token),
@@ -60,7 +71,10 @@ const MoodTrackerScreen = () => {
       fetchMoodHistory(token);
     } catch (error) {
       console.error('Error deleting mood:', error);
-      Alert.alert('Error', error.response?.data?.error || 'Failed to delete mood');
+      Alert.alert(
+        'Error',
+        error.response?.data?.error || 'Failed to delete mood',
+      );
     }
   };
 
@@ -105,9 +119,11 @@ const MoodTrackerScreen = () => {
       ) : null}
       <View style={styles.historyContainer}>
         <Text style={styles.historyHeader}>Mood History</Text>
-        {history.map((entry) => (
+        {history.map(entry => (
           <View key={entry._id} style={styles.historyItem}>
-            <Text>{entry.mood} - {new Date(entry.createdAt).toLocaleDateString()}</Text>
+            <Text>
+              {entry.mood} - {new Date(entry.createdAt).toLocaleDateString()}
+            </Text>
             <TouchableOpacity onPress={() => handleDeleteMood(entry._id)}>
               <Text style={styles.deleteText}>Delete</Text>
             </TouchableOpacity>
@@ -120,22 +136,64 @@ const MoodTrackerScreen = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#E6F0FA' },
-  header: { fontSize: 24, fontWeight: 'bold', color: '#1A3C6E', marginBottom: 20 },
-  moodContainer: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 20 },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1A3C6E',
+    marginBottom: 20,
+  },
+  moodContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
   moodButton: { padding: 10, borderRadius: 10, backgroundColor: '#FFFFFF' },
-  selectedMood: { backgroundColor: '#A3BFFA', borderWidth: 2, borderColor: '#1A3C6E' },
+  selectedMood: {
+    backgroundColor: '#A3BFFA',
+    borderWidth: 2,
+    borderColor: '#1A3C6E',
+  },
   moodEmoji: { fontSize: 30 },
   label: { fontSize: 18, color: '#1A3C6E', marginBottom: 10 },
-  journalInput: { backgroundColor: '#FFFFFF', borderRadius: 10, padding: 15, height: 150, textAlignVertical: 'top', marginBottom: 20 },
-  submitButton: { backgroundColor: '#1A3C6E', padding: 15, borderRadius: 10, alignItems: 'center' },
+  journalInput: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 15,
+    height: 150,
+    textAlignVertical: 'top',
+    marginBottom: 20,
+  },
+  submitButton: {
+    backgroundColor: '#1A3C6E',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
   submitText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' },
-  insightsContainer: { marginTop: 20, padding: 15, backgroundColor: '#F0F4FF', borderRadius: 10 },
+  insightsContainer: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: '#F0F4FF',
+    borderRadius: 10,
+  },
   insightsHeader: { fontSize: 18, fontWeight: 'bold', color: '#1A3C6E' },
   insightsText: { fontSize: 16, color: '#333', marginTop: 5 },
   historyContainer: { marginTop: 20 },
-  historyHeader: { fontSize: 18, fontWeight: 'bold', color: '#1A3C6E', marginBottom: 10 },
-  historyItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: '#FFFFFF', borderRadius: 10, marginBottom: 5 },
+  historyHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1A3C6E',
+    marginBottom: 10,
+  },
+  historyItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    marginBottom: 5,
+  },
   deleteText: { color: '#AA3A3A', fontWeight: 'bold' },
 });
 
-export default MoodTrackerScreen; 
+export default MoodTrackerScreen;

@@ -7,11 +7,13 @@ Since the React Native environment needs additional setup, I've created a **web-
 ### How to Test:
 
 1. **Open the web test file:**
+
    - Navigate to: `MindEaseFrontend/web-test.html`
    - Double-click to open in your web browser
    - Or right-click and select "Open with" → your preferred browser
 
 2. **Make sure your backend is running:**
+
    ```bash
    cd backend
    node index.js
@@ -22,7 +24,9 @@ Since the React Native environment needs additional setup, I've created a **web-
 ## 🧪 Test Scenarios
 
 ### 1. Authentication Testing
+
 - [ ] **Register a new user**
+
   - Click "Need an account? Register"
   - Enter email: `test2@example.com`
   - Enter password: `password123`
@@ -36,11 +40,14 @@ Since the React Native environment needs additional setup, I've created a **web-
   - Should navigate to Home screen
 
 ### 2. Home Screen Testing
+
 - [ ] **Daily tip display**
+
   - Verify mindfulness tip is shown
   - Check styling and layout
 
 - [ ] **Quick action buttons**
+
   - Click "Log Mood" → should navigate to Mood screen
   - Click "Meditate Now" → should navigate to Mindfulness screen
   - Click "Join Community" → should navigate to Community screen
@@ -50,12 +57,15 @@ Since the React Native environment needs additional setup, I've created a **web-
   - Check mood count updates after logging moods
 
 ### 3. Mood Tracker Testing
+
 - [ ] **Emoji mood selection**
+
   - Click different mood emojis
   - Verify selection highlighting
   - Test all 5 mood options
 
 - [ ] **Journal entry**
+
   - Enter text in journal field
   - Test multiline input
   - Verify text persistence
@@ -68,11 +78,14 @@ Since the React Native environment needs additional setup, I've created a **web-
   - Verify mood count increases
 
 ### 4. Mindfulness Screen Testing
+
 - [ ] **Exercise list**
+
   - View available exercises
   - Verify free vs premium labeling
 
 - [ ] **Exercise selection**
+
   - Click "5-Minute Breathing" → should show success message
   - Click "CBT Anxiety Relief" → should show success message
   - Click "Deep Relaxation (Premium)" → should show upgrade prompt
@@ -81,11 +94,14 @@ Since the React Native environment needs additional setup, I've created a **web-
   - Verify streak display shows "3 days 🔥"
 
 ### 5. Community Hub Testing
+
 - [ ] **Group listing**
+
   - View available groups
   - Verify free vs premium groups
 
 - [ ] **Group joining**
+
   - Click "Stress at Work" → should show joining message
   - Click "Mindfulness Enthusiasts" → should show joining message
   - Click "Therapist-Led Support (Premium)" → should show upgrade prompt
@@ -95,7 +111,9 @@ Since the React Native environment needs additional setup, I've created a **web-
   - Verify event information
 
 ### 6. Profile Screen Testing
+
 - [ ] **Subscription status**
+
   - Verify status shows "FREE"
 
 - [ ] **Upgrade functionality**
@@ -104,7 +122,9 @@ Since the React Native environment needs additional setup, I've created a **web-
   - Check console for checkout URL (may fail with temporary Stripe account)
 
 ### 7. Navigation Testing
+
 - [ ] **Tab navigation**
+
   - Click between all tabs
   - Verify smooth transitions
   - Check active tab highlighting
@@ -114,7 +134,9 @@ Since the React Native environment needs additional setup, I've created a **web-
   - Verify data persists (mood count, etc.)
 
 ### 8. Error Handling Testing
+
 - [ ] **Network errors**
+
   - Stop the backend server
   - Try to log in or save mood
   - Verify error messages appear
@@ -126,6 +148,7 @@ Since the React Native environment needs additional setup, I've created a **web-
 ## 🎯 Expected Results
 
 ### ✅ Working Features:
+
 - User registration and login
 - Mood tracking with journal entries
 - AI insights generation
@@ -135,6 +158,7 @@ Since the React Native environment needs additional setup, I've created a **web-
 - Responsive design
 
 ### ⚠️ Expected Issues:
+
 - Payment integration (using temporary Stripe account)
 - Some advanced React Native features not available in web version
 
@@ -160,11 +184,14 @@ After testing the web version:
 ## 🔧 Troubleshooting
 
 ### Common Issues:
+
 1. **"Network error" messages**
+
    - Make sure backend is running on port 5000
    - Check if `http://localhost:5000` is accessible
 
 2. **CORS errors**
+
    - Backend should have CORS configured (already done)
 
 3. **Payment errors**
@@ -172,9 +199,10 @@ After testing the web version:
    - Will work with production Stripe setup
 
 ### Browser Compatibility:
+
 - Tested on Chrome, Firefox, Safari, Edge
 - Mobile browsers should work for responsive testing
 
 ## 🎉 Success!
 
-If all tests pass, your frontend is working correctly and ready for React Native deployment! 
+If all tests pass, your frontend is working correctly and ready for React Native deployment!

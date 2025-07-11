@@ -1,1546 +1,2167 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MindEase - Frontend Test</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: background-color 0.3s, color 0.3s;
-        }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: background-color 0.3s, color 0.3s;
+      }
 
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-        }
+      .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        min-height: 100vh;
+      }
 
-        .screen {
-            display: none;
-            background: var(--bg-secondary);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background-color 0.3s;
-        }
+      .screen {
+        display: none;
+        background: var(--bg-secondary);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s;
+      }
 
-        .screen.active {
-            display: block;
-        }
+      .screen.active {
+        display: block;
+      }
 
-        .header {
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--text-primary);
-        }
+      .header {
+        font-size: 28px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+        color: var(--text-primary);
+      }
 
-        .input {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            margin-bottom: 15px;
-            font-size: 16px;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-        }
+      .input {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        margin-bottom: 15px;
+        font-size: 16px;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+      }
 
-        .button {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--button-primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
+      .button {
+        width: 100%;
+        padding: 15px;
+        background-color: var(--button-primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
 
-        .button:hover {
-            background-color: #2a4a7a;
-        }
+      .button:hover {
+        background-color: #2a4a7a;
+      }
 
-        .button.secondary {
-            background-color: var(--button-secondary);
-        }
+      .button.secondary {
+        background-color: var(--button-secondary);
+      }
 
-        .button.danger {
-            background-color: var(--button-danger);
-        }
+      .button.danger {
+        background-color: var(--button-danger);
+      }
 
-        .nav-tabs {
-            display: none; /* Hide nav bar by default */
-            background: var(--bg-secondary);
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background-color 0.3s;
-        }
+      .nav-tabs {
+        display: none; /* Hide nav bar by default */
+        background: var(--bg-secondary);
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s;
+      }
 
-        .container.logged-in .nav-tabs {
-            display: flex; /* Show nav bar only when logged in */
-            align-items: center; /* Vertically align items */
-        }
+      .container.logged-in .nav-tabs {
+        display: flex; /* Show nav bar only when logged in */
+        align-items: center; /* Vertically align items */
+      }
 
-        .nav-tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            background: var(--bg-secondary);
-            border: none;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+      .nav-tab {
+        flex: 1;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        background: var(--bg-secondary);
+        border: none;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
 
-        .nav-tab.active {
-            background: var(--button-primary);
-            color: white;
-        }
+      .nav-tab.active {
+        background: var(--button-primary);
+        color: white;
+      }
 
-        .mood-container {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
+      .mood-container {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+      }
 
-        .mood-button {
-            padding: 10px;
-            border-radius: 10px;
-            background: white;
-            border: 2px solid transparent;
-            cursor: pointer;
-            font-size: 30px;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-        }
+      .mood-button {
+        padding: 10px;
+        border-radius: 10px;
+        background: white;
+        border: 2px solid transparent;
+        cursor: pointer;
+        font-size: 30px;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+      }
 
-        .mood-button.selected {
-            background: var(--accent-primary);
-            border-color: var(--text-primary);
-        }
+      .mood-button.selected {
+        background: var(--accent-primary);
+        border-color: var(--text-primary);
+      }
 
-        .journal-input {
-            width: 100%;
-            height: 150px;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 16px;
-            resize: vertical;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-        }
+      .journal-input {
+        width: 100%;
+        height: 150px;
+        padding: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 16px;
+        resize: vertical;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+      }
 
-        .tip-container {
-            background: var(--accent-secondary);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
+      .tip-container {
+        background: var(--accent-secondary);
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
 
-        .tip-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+      .tip-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
 
-        .actions-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+      .actions-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
 
-        .action-button {
-            flex: 1;
-            padding: 15px;
-            background: var(--button-primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+      .action-button {
+        flex: 1;
+        padding: 15px;
+        background: var(--button-primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+      }
 
-        .progress-container {
-            background: var(--bg-secondary);
-            padding: 15px;
-            border-radius: 10px;
-        }
+      .progress-container {
+        background: var(--bg-secondary);
+        padding: 15px;
+        border-radius: 10px;
+      }
 
-        .progress-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: var(--text-primary);
-        }
+      .progress-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: var(--text-primary);
+      }
 
-        .progress-stats {
-            display: flex;
-            justify-content: space-around;
-            gap: 20px;
-        }
+      .progress-stats {
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+      }
 
-        .stat {
-            text-align: center;
-            flex: 1;
-        }
+      .stat {
+        text-align: center;
+        flex: 1;
+      }
 
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--button-primary);
-            margin-bottom: 5px;
-        }
+      .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--button-primary);
+        margin-bottom: 5px;
+      }
 
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+      .stat-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
 
-        .exercise-button, .group-button {
-            width: 100%;
-            padding: 15px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            text-align: left;
-            cursor: pointer;
-            color: var(--text-primary);
-        }
+      .exercise-button,
+      .group-button {
+        width: 100%;
+        padding: 15px;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        text-align: left;
+        cursor: pointer;
+        color: var(--text-primary);
+      }
 
-        .exercise-button.locked, .group-button.locked {
-            background: #E0E0E0;
-            color: #666;
-        }
+      .exercise-button.locked,
+      .group-button.locked {
+        background: #e0e0e0;
+        color: #666;
+      }
 
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background: var(--bg-primary);
-            border-radius: 10px;
-            margin-bottom: 5px;
-        }
+      .history-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background: var(--bg-primary);
+        border-radius: 10px;
+        margin-bottom: 5px;
+      }
 
-        .delete-text {
-            color: #AA3A3A;
-            font-weight: bold;
-            cursor: pointer;
-        }
+      .delete-text {
+        color: #aa3a3a;
+        font-weight: bold;
+        cursor: pointer;
+      }
 
-        .toggle-journal {
-            color: var(--button-secondary);
-            text-decoration: underline;
-            cursor: pointer;
-            font-size: 12px;
-            margin-left: 5px;
-        }
+      .toggle-journal {
+        color: var(--button-secondary);
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 12px;
+        margin-left: 5px;
+      }
 
-        .status {
-            text-align: center;
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
+      .status {
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
 
-        .toggle-text {
-            text-align: center;
-            color: var(--text-primary);
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: underline;
-        }
+      .toggle-text {
+        text-align: center;
+        color: var(--text-primary);
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: underline;
+      }
 
-        .insights-container {
-            background: var(--accent-secondary);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
+      .insights-container {
+        background: var(--accent-secondary);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
 
-        .insights-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+      .insights-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
 
-        .event-container {
-            background: var(--accent-secondary);
-            padding: 15px;
-            border-radius: 10px;
-        }
+      .event-container {
+        background: var(--accent-secondary);
+        padding: 15px;
+        border-radius: 10px;
+      }
 
-        .event-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+      .event-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
 
-        .streak-button {
-            background: #A3BFFA;
-            padding: 10px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 20px;
-        }
+      .streak-button {
+        background: #a3bffa;
+        padding: 10px;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 20px;
+      }
 
-        .streak-text {
-            font-size: 14px;
-            font-weight: bold;
-        }
+      .streak-text {
+        font-size: 14px;
+        font-weight: bold;
+      }
 
-        .alert {
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: none;
-        }
+      .alert {
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        display: none;
+      }
 
-        .alert.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+      .alert.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
 
-        .alert.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+      .alert.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
 
-        /* Hide protected tabs by default */
-        .protected-tab {
-            display: none;
-        }
+      /* Hide protected tabs by default */
+      .protected-tab {
+        display: none;
+      }
 
-        /* When logged-in, show protected tabs and hide the login tab */
-        .container.logged-in .protected-tab {
-            display: flex;
-        }
+      /* When logged-in, show protected tabs and hide the login tab */
+      .container.logged-in .protected-tab {
+        display: flex;
+      }
 
-        .container.logged-in #loginTab {
-            display: none;
-        }
+      .container.logged-in #loginTab {
+        display: none;
+      }
 
-        #logoutButton {
-            margin-left: auto; /* Push logout button to the right */
-            background-color: var(--button-danger);
-        }
+      #logoutButton {
+        margin-left: auto; /* Push logout button to the right */
+        background-color: var(--button-danger);
+      }
 
-        /* --- Dark Mode --- */
-        :root {
-            --bg-primary: #E6F0FA;
-            --bg-secondary: white;
-            --text-primary: #1A3C6E;
-            --text-secondary: #666;
-            --border-color: #ddd;
-            --button-primary: #1A3C6E;
-            --button-secondary: #3A6EAA;
-            --button-danger: #AA3A3A;
-            --accent-primary: #A3BFFA;
-            --accent-secondary: #F0F4FF;
-        }
+      /* --- Dark Mode --- */
+      :root {
+        --bg-primary: #e6f0fa;
+        --bg-secondary: white;
+        --text-primary: #1a3c6e;
+        --text-secondary: #666;
+        --border-color: #ddd;
+        --button-primary: #1a3c6e;
+        --button-secondary: #3a6eaa;
+        --button-danger: #aa3a3a;
+        --accent-primary: #a3bffa;
+        --accent-secondary: #f0f4ff;
+      }
 
-        .dark-mode {
-            --bg-primary: #1A202C;
-            --bg-secondary: #2D3748;
-            --text-primary: #E2E8F0;
-            --text-secondary: #A0AEC0;
-            --border-color: #4A5568;
-            --button-primary: #3A6EAA;
-            --button-secondary: #2C5282;
-            --button-danger: #C53030;
-            --accent-primary: #4A5568;
-            --accent-secondary: #2D3748;
-        }
+      .dark-mode {
+        --bg-primary: #1a202c;
+        --bg-secondary: #2d3748;
+        --text-primary: #e2e8f0;
+        --text-secondary: #a0aec0;
+        --border-color: #4a5568;
+        --button-primary: #3a6eaa;
+        --button-secondary: #2c5282;
+        --button-danger: #c53030;
+        --accent-primary: #4a5568;
+        --accent-secondary: #2d3748;
+      }
 
-        /* --- Theme Toggle Switch --- */
-        .theme-switch-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-left: auto;
-        }
-        
-        .theme-switch {
-            display: inline-block;
-            height: 24px;
-            position: relative;
-            width: 50px;
-            margin: 0 10px;
-        }
-        .theme-switch input {
-            display:none;
-        }
-        .slider {
-            background-color: #ccc;
-            bottom: 0;
-            cursor: pointer;
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            background-color: #fff;
-            bottom: 4px;
-            content: "";
-            height: 16px;
-            left: 4px;
-            position: absolute;
-            transition: .4s;
-            width: 16px;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #2C5282;
-        }
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        
-        .age-suggestion {
-            background: var(--accent-primary);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            padding: 5px 12px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .age-suggestion:hover {
-            background: var(--accent-secondary);
-        }
+      /* --- Theme Toggle Switch --- */
+      .theme-switch-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+      }
+
+      .theme-switch {
+        display: inline-block;
+        height: 24px;
+        position: relative;
+        width: 50px;
+        margin: 0 10px;
+      }
+      .theme-switch input {
+        display: none;
+      }
+      .slider {
+        background-color: #ccc;
+        bottom: 0;
+        cursor: pointer;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+      .slider:before {
+        background-color: #fff;
+        bottom: 4px;
+        content: '';
+        height: 16px;
+        left: 4px;
+        position: absolute;
+        transition: 0.4s;
+        width: 16px;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: #2c5282;
+      }
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+
+      .age-suggestion {
+        background: var(--accent-primary);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        padding: 5px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .age-suggestion:hover {
+        background: var(--accent-secondary);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <!-- Loading Indicator -->
-        <div id="loadingIndicator" style="display: none; text-align: center; padding: 50px; color: var(--text-secondary);">
-            <div style="font-size: 24px; margin-bottom: 10px;">🔄</div>
-            <div>Loading MindEase...</div>
+      <!-- Loading Indicator -->
+      <div
+        id="loadingIndicator"
+        style="
+          display: none;
+          text-align: center;
+          padding: 50px;
+          color: var(--text-secondary);
+        "
+      >
+        <div style="font-size: 24px; margin-bottom: 10px">🔄</div>
+        <div>Loading MindEase...</div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="showScreen('home')">Home</button>
+        <button class="nav-tab" onclick="showScreen('mood')">Mood</button>
+        <button class="nav-tab" onclick="showScreen('mindfulness')">
+          Mindfulness
+        </button>
+        <button class="nav-tab" onclick="showScreen('community')">
+          Community
+        </button>
+        <button class="nav-tab" onclick="showScreen('profile')">Profile</button>
+
+        <div class="theme-switch-wrapper">
+          <span>☀️</span>
+          <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onchange="toggleDarkMode()" />
+            <div class="slider round"></div>
+          </label>
+          <span>🌙</span>
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="nav-tabs">
-            <button class="nav-tab" onclick="showScreen('home')">Home</button>
-            <button class="nav-tab" onclick="showScreen('mood')">Mood</button>
-            <button class="nav-tab" onclick="showScreen('mindfulness')">Mindfulness</button>
-            <button class="nav-tab" onclick="showScreen('community')">Community</button>
-            <button class="nav-tab" onclick="showScreen('profile')">Profile</button>
-            
-            <div class="theme-switch-wrapper">
-                <span>☀️</span>
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" onchange="toggleDarkMode()" />
-                    <div class="slider round"></div>
-                </label>
-                <span>🌙</span>
-            </div>
-            
-            <button class="nav-tab" id="logoutButton" onclick="logout()">Logout</button>
+        <button class="nav-tab" id="logoutButton" onclick="logout()">
+          Logout
+        </button>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="alert" class="alert"></div>
+
+      <!-- Login Screen -->
+      <div id="login" class="screen active">
+        <div class="header" id="loginHeader">Login</div>
+        <div id="loginForm">
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Email:</label
+            >
+            <input
+              type="email"
+              id="email"
+              class="input"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Password:</label
+            >
+            <input
+              type="password"
+              id="password"
+              class="input"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <button
+            class="button"
+            onclick="handleAuth(document.getElementById('email').value, document.getElementById('password').value, false)"
+          >
+            Login
+          </button>
+          <button class="button" onclick="toggleAuth()">
+            Need an account? Register
+          </button>
         </div>
 
-        <!-- Alert Container -->
-        <div id="alert" class="alert"></div>
+        <div id="registerForm" style="display: none">
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Email:</label
+            >
+            <input
+              type="email"
+              id="regEmail"
+              class="input"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Password:</label
+            >
+            <input
+              type="password"
+              id="regPassword"
+              class="input"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <button
+            class="button"
+            onclick="handleAuth(document.getElementById('regEmail').value, document.getElementById('regPassword').value, true)"
+          >
+            Register
+          </button>
+          <button class="button" onclick="toggleAuth()">
+            Already have an account? Login
+          </button>
+        </div>
+      </div>
 
-        <!-- Login Screen -->
-        <div id="login" class="screen active">
-            <div class="header" id="loginHeader">Login</div>
-            <div id="loginForm">
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Email:</label>
-                    <input type="email" id="email" class="input" placeholder="Enter your email" required>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Password:</label>
-                    <input type="password" id="password" class="input" placeholder="Enter your password" required>
-                </div>
-                <button class="button" onclick="handleAuth(document.getElementById('email').value, document.getElementById('password').value, false)">Login</button>
-                <button class="button" onclick="toggleAuth()">Need an account? Register</button>
-            </div>
-            
-            <div id="registerForm" style="display: none;">
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Email:</label>
-                    <input type="email" id="regEmail" class="input" placeholder="Enter your email" required>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Password:</label>
-                    <input type="password" id="regPassword" class="input" placeholder="Enter your password" required>
-                </div>
-                <button class="button" onclick="handleAuth(document.getElementById('regEmail').value, document.getElementById('regPassword').value, true)">Register</button>
-                <button class="button" onclick="toggleAuth()">Already have an account? Login</button>
-            </div>
+      <!-- Home Screen -->
+      <div id="home" class="screen">
+        <div class="header">Welcome to MindEase</div>
+        <div class="tip-container">
+          <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px">
+            Daily Mindfulness Tip
+          </div>
+          <div>Try a 5-minute breathing exercise to start your day calmly.</div>
         </div>
 
-        <!-- Home Screen -->
-        <div id="home" class="screen">
-            <div class="header">Welcome to MindEase</div>
-            <div class="tip-container">
-                <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Daily Mindfulness Tip</div>
-                <div>Try a 5-minute breathing exercise to start your day calmly.</div>
-            </div>
+        <div
+          class="goals-container"
+          style="
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+          "
+        >
+          <div
+            style="
+              font-size: 18px;
+              font-weight: bold;
+              margin-bottom: 10px;
+              color: var(--text-primary);
+            "
+          >
+            What's your mental health goal today?
+          </div>
+          <textarea
+            id="goalInput"
+            class="input"
+            placeholder="e.g., I want to reduce stress, improve my sleep, build confidence..."
+            style="height: 80px; resize: vertical"
+          ></textarea>
+          <button
+            class="button"
+            onclick="getSuggestions()"
+            style="margin-top: 10px"
+          >
+            Get Personalized Suggestions
+          </button>
 
-            <div class="goals-container" style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: var(--text-primary);">What's your mental health goal today?</div>
-                <textarea id="goalInput" class="input" placeholder="e.g., I want to reduce stress, improve my sleep, build confidence..." style="height: 80px; resize: vertical;"></textarea>
-                <button class="button" onclick="getSuggestions()" style="margin-top: 10px;">Get Personalized Suggestions</button>
-                
-                <div id="suggestionsContainer" style="display: none; margin-top: 15px;">
-                    <div style="background: var(--bg-primary); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-                        <div style="font-weight: bold; color: var(--text-primary); margin-bottom: 5px;">💡 Exercise Suggestion:</div>
-                        <div id="exerciseSuggestion" style="color: var(--text-secondary);"></div>
-                        <div style="margin-top: 8px;">
-                            <button class="feedback-btn" onclick="rateSuggestion('exercise', 1)" style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-right: 5px; cursor: pointer;">👍</button>
-                            <button class="feedback-btn" onclick="rateSuggestion('exercise', 0)" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">👎</button>
-                        </div>
-                    </div>
-                    <div style="background: var(--bg-primary); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-                        <div style="font-weight: bold; color: var(--text-primary); margin-bottom: 5px;">📱 Try This in MindEase:</div>
-                        <div id="appActionSuggestion" style="color: var(--text-secondary);"></div>
-                        <div style="margin-top: 8px;">
-                            <button class="feedback-btn" onclick="rateSuggestion('appAction', 1)" style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-right: 5px; cursor: pointer;">👍</button>
-                            <button class="feedback-btn" onclick="rateSuggestion('appAction', 0)" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">👎</button>
-                        </div>
-                    </div>
-                    <div style="background: var(--bg-primary); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-                        <div style="font-weight: bold; color: var(--text-primary); margin-bottom: 5px;">💪 Encouragement:</div>
-                        <div id="messageSuggestion" style="color: var(--text-secondary);"></div>
-                    </div>
-                    <div style="margin-top: 15px;">
-                        <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Overall, were these suggestions helpful?</label>
-                        <button class="feedback-btn" onclick="rateOverall(true)" style="background: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-right: 10px; cursor: pointer;">Yes, very helpful!</button>
-                        <button class="feedback-btn" onclick="rateOverall(false)" style="background: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Not really</button>
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Additional notes (optional):</label>
-                        <textarea id="goalNotes" class="input" placeholder="Any thoughts on what worked or didn't work?" style="height: 60px; resize: vertical;"></textarea>
-                    </div>
-                    <button class="button" onclick="saveGoal()" style="margin-top: 10px;">Save Goal & Suggestions</button>
-                </div>
+          <div
+            id="suggestionsContainer"
+            style="display: none; margin-top: 15px"
+          >
+            <div
+              style="
+                background: var(--bg-primary);
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+              "
+            >
+              <div
+                style="
+                  font-weight: bold;
+                  color: var(--text-primary);
+                  margin-bottom: 5px;
+                "
+              >
+                💡 Exercise Suggestion:
+              </div>
+              <div
+                id="exerciseSuggestion"
+                style="color: var(--text-secondary)"
+              ></div>
+              <div style="margin-top: 8px">
+                <button
+                  class="feedback-btn"
+                  onclick="rateSuggestion('exercise', 1)"
+                  style="
+                    background: #4caf50;
+                    color: white;
+                    border: none;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    margin-right: 5px;
+                    cursor: pointer;
+                  "
+                >
+                  👍
+                </button>
+                <button
+                  class="feedback-btn"
+                  onclick="rateSuggestion('exercise', 0)"
+                  style="
+                    background: #f44336;
+                    color: white;
+                    border: none;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                  "
+                >
+                  👎
+                </button>
+              </div>
             </div>
-
-            <div class="goals-history-container" style="background: var(--bg-secondary); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: var(--text-primary);">Your Goal History</div>
-                <div id="goalsHistoryList" style="max-height: 300px; overflow-y: auto;">
-                    <div style="text-align: center; color: var(--text-secondary); padding: 20px;">No goals yet. Set your first goal above!</div>
-                </div>
+            <div
+              style="
+                background: var(--bg-primary);
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+              "
+            >
+              <div
+                style="
+                  font-weight: bold;
+                  color: var(--text-primary);
+                  margin-bottom: 5px;
+                "
+              >
+                📱 Try This in MindEase:
+              </div>
+              <div
+                id="appActionSuggestion"
+                style="color: var(--text-secondary)"
+              ></div>
+              <div style="margin-top: 8px">
+                <button
+                  class="feedback-btn"
+                  onclick="rateSuggestion('appAction', 1)"
+                  style="
+                    background: #4caf50;
+                    color: white;
+                    border: none;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    margin-right: 5px;
+                    cursor: pointer;
+                  "
+                >
+                  👍
+                </button>
+                <button
+                  class="feedback-btn"
+                  onclick="rateSuggestion('appAction', 0)"
+                  style="
+                    background: #f44336;
+                    color: white;
+                    border: none;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                  "
+                >
+                  👎
+                </button>
+              </div>
             </div>
-
-            <div class="actions-container">
-                <button class="action-button" onclick="showScreen('mood')">Log Mood</button>
-                <button class="action-button" onclick="showScreen('mindfulness')">Mindfulness</button>
-                <button class="action-button" onclick="showScreen('community')">Community</button>
+            <div
+              style="
+                background: var(--bg-primary);
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+              "
+            >
+              <div
+                style="
+                  font-weight: bold;
+                  color: var(--text-primary);
+                  margin-bottom: 5px;
+                "
+              >
+                💪 Encouragement:
+              </div>
+              <div
+                id="messageSuggestion"
+                style="color: var(--text-secondary)"
+              ></div>
             </div>
-            
-            <div class="progress-container">
-                <div class="progress-header">Weekly Progress</div>
-                <div class="progress-stats">
-                    <div class="stat">
-                        <div class="stat-number" id="moodCount">0</div>
-                        <div class="stat-label">Moods Logged</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number" id="streakCount">0</div>
-                        <div class="stat-label">Day Streak</div>
-                    </div>
-                </div>
+            <div style="margin-top: 15px">
+              <label
+                style="
+                  color: var(--text-primary);
+                  display: block;
+                  margin-bottom: 5px;
+                "
+                >Overall, were these suggestions helpful?</label
+              >
+              <button
+                class="feedback-btn"
+                onclick="rateOverall(true)"
+                style="
+                  background: #4caf50;
+                  color: white;
+                  border: none;
+                  padding: 8px 15px;
+                  border-radius: 5px;
+                  margin-right: 10px;
+                  cursor: pointer;
+                "
+              >
+                Yes, very helpful!
+              </button>
+              <button
+                class="feedback-btn"
+                onclick="rateOverall(false)"
+                style="
+                  background: #f44336;
+                  color: white;
+                  border: none;
+                  padding: 8px 15px;
+                  border-radius: 5px;
+                  cursor: pointer;
+                "
+              >
+                Not really
+              </button>
             </div>
+            <div style="margin-top: 10px">
+              <label
+                style="
+                  color: var(--text-primary);
+                  display: block;
+                  margin-bottom: 5px;
+                "
+                >Additional notes (optional):</label
+              >
+              <textarea
+                id="goalNotes"
+                class="input"
+                placeholder="Any thoughts on what worked or didn't work?"
+                style="height: 60px; resize: vertical"
+              ></textarea>
+            </div>
+            <button
+              class="button"
+              onclick="saveGoal()"
+              style="margin-top: 10px"
+            >
+              Save Goal & Suggestions
+            </button>
+          </div>
         </div>
 
-        <!-- Mood Tracker Screen -->
-        <div id="mood" class="screen">
-            <div class="header">How are you feeling today?</div>
-            <div class="mood-container">
-                <button class="mood-button" onclick="selectMood('😊')">😊</button>
-                <button class="mood-button" onclick="selectMood('🙂')">🙂</button>
-                <button class="mood-button" onclick="selectMood('😐')">😐</button>
-                <button class="mood-button" onclick="selectMood('😔')">😔</button>
-                <button class="mood-button" onclick="selectMood('😣')">😣</button>
+        <div
+          class="goals-history-container"
+          style="
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+          "
+        >
+          <div
+            style="
+              font-size: 18px;
+              font-weight: bold;
+              margin-bottom: 10px;
+              color: var(--text-primary);
+            "
+          >
+            Your Goal History
+          </div>
+          <div
+            id="goalsHistoryList"
+            style="max-height: 300px; overflow-y: auto"
+          >
+            <div
+              style="
+                text-align: center;
+                color: var(--text-secondary);
+                padding: 20px;
+              "
+            >
+              No goals yet. Set your first goal above!
             </div>
-            <div>Journal Entry</div>
-            <textarea id="journal" class="journal-input" placeholder="What's on your mind?"></textarea>
-            <button class="button" onclick="saveMood()">Save Entry</button>
-            <div id="insights" style="background: var(--accent-secondary); padding: 15px; border-radius: 10px; margin-top: 20px; display: none;">
-                <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">AI Insights</div>
-                <div id="insightsText"></div>
-            </div>
-            <div id="history" style="margin-top: 20px;">
-                <div class="header" style="font-size: 18px;">Mood History</div>
-                <div id="historyList"></div>
-            </div>
+          </div>
         </div>
 
-        <!-- Mindfulness Screen -->
-        <div id="mindfulness" class="screen">
-            <div class="header">Mindfulness & CBT Exercises</div>
-            <div style="margin-bottom: 15px;">Recommended: 5-Minute Breathing</div>
-            <button class="exercise-button" onclick="startExercise('5-Minute Breathing')">5-Minute Breathing</button>
-            <button class="exercise-button" onclick="startExercise('CBT Anxiety Relief')">CBT Anxiety Relief</button>
-            <button class="exercise-button locked" onclick="startExercise('Deep Relaxation')">Deep Relaxation (Premium)</button>
-            <div style="background: #A3BFFA; padding: 10px; border-radius: 10px; text-align: center; margin-top: 20px;">
-                <div style="font-size: 14px; font-weight: bold;">Streak: 3 days 🔥</div>
-            </div>
+        <div class="actions-container">
+          <button class="action-button" onclick="showScreen('mood')">
+            Log Mood
+          </button>
+          <button class="action-button" onclick="showScreen('mindfulness')">
+            Mindfulness
+          </button>
+          <button class="action-button" onclick="showScreen('community')">
+            Community
+          </button>
         </div>
 
-        <!-- Community Hub Screen -->
-        <div id="community" class="screen">
-            <div class="header">Community Hub</div>
-            <div style="margin-bottom: 15px;">Connect with others for support</div>
-            <button class="group-button" onclick="joinGroup('Stress at Work')">Stress at Work</button>
-            <button class="group-button" onclick="joinGroup('Mindfulness Enthusiasts')">Mindfulness Enthusiasts</button>
-            <button class="group-button locked" onclick="joinGroup('Therapist-Led Support')">Therapist-Led Support (Premium)</button>
-            <div style="background: var(--accent-secondary); padding: 15px; border-radius: 10px; margin-top: 20px;">
-                <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Upcoming Events</div>
-                <div>Guided Meditation: Tomorrow, 7 PM</div>
+        <div class="progress-container">
+          <div class="progress-header">Weekly Progress</div>
+          <div class="progress-stats">
+            <div class="stat">
+              <div class="stat-number" id="moodCount">0</div>
+              <div class="stat-label">Moods Logged</div>
             </div>
+            <div class="stat">
+              <div class="stat-number" id="streakCount">0</div>
+              <div class="stat-label">Day Streak</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mood Tracker Screen -->
+      <div id="mood" class="screen">
+        <div class="header">How are you feeling today?</div>
+        <div class="mood-container">
+          <button class="mood-button" onclick="selectMood('😊')">😊</button>
+          <button class="mood-button" onclick="selectMood('🙂')">🙂</button>
+          <button class="mood-button" onclick="selectMood('😐')">😐</button>
+          <button class="mood-button" onclick="selectMood('😔')">😔</button>
+          <button class="mood-button" onclick="selectMood('😣')">😣</button>
+        </div>
+        <div>Journal Entry</div>
+        <textarea
+          id="journal"
+          class="journal-input"
+          placeholder="What's on your mind?"
+        ></textarea>
+        <button class="button" onclick="saveMood()">Save Entry</button>
+        <div
+          id="insights"
+          style="
+            background: var(--accent-secondary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+          "
+        >
+          <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px">
+            AI Insights
+          </div>
+          <div id="insightsText"></div>
+        </div>
+        <div id="history" style="margin-top: 20px">
+          <div class="header" style="font-size: 18px">Mood History</div>
+          <div id="historyList"></div>
+        </div>
+      </div>
+
+      <!-- Mindfulness Screen -->
+      <div id="mindfulness" class="screen">
+        <div class="header">Mindfulness & CBT Exercises</div>
+        <div style="margin-bottom: 15px">Recommended: 5-Minute Breathing</div>
+        <button
+          class="exercise-button"
+          onclick="startExercise('5-Minute Breathing')"
+        >
+          5-Minute Breathing
+        </button>
+        <button
+          class="exercise-button"
+          onclick="startExercise('CBT Anxiety Relief')"
+        >
+          CBT Anxiety Relief
+        </button>
+        <button
+          class="exercise-button locked"
+          onclick="startExercise('Deep Relaxation')"
+        >
+          Deep Relaxation (Premium)
+        </button>
+        <div
+          style="
+            background: #a3bffa;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+          "
+        >
+          <div style="font-size: 14px; font-weight: bold">
+            Streak: 3 days 🔥
+          </div>
+        </div>
+      </div>
+
+      <!-- Community Hub Screen -->
+      <div id="community" class="screen">
+        <div class="header">Community Hub</div>
+        <div style="margin-bottom: 15px">Connect with others for support</div>
+        <button class="group-button" onclick="joinGroup('Stress at Work')">
+          Stress at Work
+        </button>
+        <button
+          class="group-button"
+          onclick="joinGroup('Mindfulness Enthusiasts')"
+        >
+          Mindfulness Enthusiasts
+        </button>
+        <button
+          class="group-button locked"
+          onclick="joinGroup('Therapist-Led Support')"
+        >
+          Therapist-Led Support (Premium)
+        </button>
+        <div
+          style="
+            background: var(--accent-secondary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+          "
+        >
+          <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px">
+            Upcoming Events
+          </div>
+          <div>Guided Meditation: Tomorrow, 7 PM</div>
+        </div>
+      </div>
+
+      <!-- Profile Screen -->
+      <div id="profile" class="screen">
+        <div class="header">Profile</div>
+        <div style="text-align: center; font-size: 18px; margin-bottom: 20px">
+          Subscription Status: <span id="subscriptionStatus">FREE</span>
         </div>
 
-        <!-- Profile Screen -->
-        <div id="profile" class="screen">
-            <div class="header">Profile</div>
-            <div style="text-align: center; font-size: 18px; margin-bottom: 20px;">Subscription Status: <span id="subscriptionStatus">FREE</span></div>
-            
-            <div style="margin-bottom: 20px;">
-                <h3 style="color: var(--text-primary); margin-bottom: 10px;">Personal Information</h3>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Name:</label>
-                    <input type="text" id="profileName" class="input" placeholder="Enter your name">
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Age:</label>
-                    <input type="number" id="profileAge" class="input" placeholder="Enter your age" min="1" max="120">
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Gender:</label>
-                    <input type="text" id="profileGender" class="input" placeholder="Enter your gender" list="genderOptions">
-                    <datalist id="genderOptions">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Non-binary">Non-binary</option>
-                        <option value="Gender fluid">Gender fluid</option>
-                        <option value="Transgender">Transgender</option>
-                        <option value="Other">Other</option>
-                        <option value="Prefer not to say">Prefer not to say</option>
-                    </datalist>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <h3 style="color: var(--text-primary); margin-bottom: 10px;">Emergency Contact</h3>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Contact Name:</label>
-                    <input type="text" id="emergencyName" class="input" placeholder="Emergency contact name">
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Relationship:</label>
-                    <input type="text" id="emergencyRelationship" class="input" placeholder="e.g., Spouse, Parent, Friend">
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Phone Number:</label>
-                    <input type="tel" id="emergencyPhone" class="input" placeholder="(555) 123-4567" oninput="formatPhoneNumber(this)" maxlength="14">
-                </div>
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <h3 style="color: var(--text-primary); margin-bottom: 10px;">Preferences</h3>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Time Zone:</label>
-                    <select id="timezone" class="input">
-                        <option value="UTC">UTC</option>
-                        <option value="EST">Eastern Time</option>
-                        <option value="CST">Central Time</option>
-                        <option value="MST">Mountain Time</option>
-                        <option value="PST">Pacific Time</option>
-                    </select>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: block; margin-bottom: 5px;">Language:</label>
-                    <select id="language" class="input">
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                    </select>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <h3 style="color: var(--text-primary); margin-bottom: 10px;">Privacy & Notifications</h3>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="shareData" style="width: auto;">
-                        Share anonymous data for research
-                    </label>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="moodReminders" style="width: auto;">
-                        Daily mood reminders
-                    </label>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="mindfulnessReminders" style="width: auto;">
-                        Mindfulness reminders
-                    </label>
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <label style="color: var(--text-primary); display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="weeklyInsights" style="width: auto;">
-                        Weekly insights
-                    </label>
-                </div>
-            </div>
-            
-            <button class="button" onclick="saveProfile()">Save Profile</button>
-            
-            <hr style="margin: 20px 0; border-color: var(--border-color);">
-            
-            <button class="button" onclick="logout()" style="background: #AA3A3A;">Logout</button>
+        <div style="margin-bottom: 20px">
+          <h3 style="color: var(--text-primary); margin-bottom: 10px">
+            Personal Information
+          </h3>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Name:</label
+            >
+            <input
+              type="text"
+              id="profileName"
+              class="input"
+              placeholder="Enter your name"
+            />
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Age:</label
+            >
+            <input
+              type="number"
+              id="profileAge"
+              class="input"
+              placeholder="Enter your age"
+              min="1"
+              max="120"
+            />
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Gender:</label
+            >
+            <input
+              type="text"
+              id="profileGender"
+              class="input"
+              placeholder="Enter your gender"
+              list="genderOptions"
+            />
+            <datalist id="genderOptions">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Non-binary">Non-binary</option>
+              <option value="Gender fluid">Gender fluid</option>
+              <option value="Transgender">Transgender</option>
+              <option value="Other">Other</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </datalist>
+          </div>
         </div>
+
+        <div style="margin-bottom: 20px">
+          <h3 style="color: var(--text-primary); margin-bottom: 10px">
+            Emergency Contact
+          </h3>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Contact Name:</label
+            >
+            <input
+              type="text"
+              id="emergencyName"
+              class="input"
+              placeholder="Emergency contact name"
+            />
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Relationship:</label
+            >
+            <input
+              type="text"
+              id="emergencyRelationship"
+              class="input"
+              placeholder="e.g., Spouse, Parent, Friend"
+            />
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Phone Number:</label
+            >
+            <input
+              type="tel"
+              id="emergencyPhone"
+              class="input"
+              placeholder="(555) 123-4567"
+              oninput="formatPhoneNumber(this)"
+              maxlength="14"
+            />
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px">
+          <h3 style="color: var(--text-primary); margin-bottom: 10px">
+            Preferences
+          </h3>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Time Zone:</label
+            >
+            <select id="timezone" class="input">
+              <option value="UTC">UTC</option>
+              <option value="EST">Eastern Time</option>
+              <option value="CST">Central Time</option>
+              <option value="MST">Mountain Time</option>
+              <option value="PST">Pacific Time</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Language:</label
+            >
+            <select id="language" class="input">
+              <option value="en">English</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px">
+          <h3 style="color: var(--text-primary); margin-bottom: 10px">
+            Privacy & Notifications
+          </h3>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <input type="checkbox" id="shareData" style="width: auto" />
+              Share anonymous data for research
+            </label>
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <input type="checkbox" id="moodReminders" style="width: auto" />
+              Daily mood reminders
+            </label>
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <input
+                type="checkbox"
+                id="mindfulnessReminders"
+                style="width: auto"
+              />
+              Mindfulness reminders
+            </label>
+          </div>
+          <div style="margin-bottom: 10px">
+            <label
+              style="
+                color: var(--text-primary);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <input type="checkbox" id="weeklyInsights" style="width: auto" />
+              Weekly insights
+            </label>
+          </div>
+        </div>
+
+        <button class="button" onclick="saveProfile()">Save Profile</button>
+
+        <hr style="margin: 20px 0; border-color: var(--border-color)" />
+
+        <button class="button" onclick="logout()" style="background: #aa3a3a">
+          Logout
+        </button>
+      </div>
     </div>
 
     <script>
-        const API_BASE_URL = 'http://localhost:5000';
-        let currentUser = null;
-        let isRegistering = false;
-        let selectedMood = null;
-        let moodHistory = [];
-        let subscriptionStatus = 'free';
-        let goalsHistory = [];
-        let currentGoalFeedback = {
-            exerciseRating: null,
-            appActionRating: null,
-            overallHelpful: null,
-            notes: ''
+      const API_BASE_URL = 'http://localhost:5000';
+      let currentUser = null;
+      let isRegistering = false;
+      let selectedMood = null;
+      let moodHistory = [];
+      let subscriptionStatus = 'free';
+      let goalsHistory = [];
+      let currentGoalFeedback = {
+        exerciseRating: null,
+        appActionRating: null,
+        overallHelpful: null,
+        notes: '',
+      };
+      let currentGoalId = null;
+
+      // --- Dark Mode ---
+      const darkModeToggle = document.getElementById('checkbox');
+
+      // Check for saved user preference, if any, on page load
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+      }
+
+      function toggleDarkMode() {
+        if (darkModeToggle.checked) {
+          document.body.classList.add('dark-mode');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.body.classList.remove('dark-mode');
+          localStorage.setItem('theme', 'light');
+        }
+      }
+
+      // Screen Navigation
+      function showScreen(screenName) {
+        // If not logged in, only allow login/register screen
+        if (!currentUser && screenName !== 'login') {
+          return; // Don't allow navigation away from login
+        }
+
+        // Save the last visited screen so we can return to it on refresh
+        if (screenName !== 'login') {
+          localStorage.setItem('lastScreen', screenName);
+        }
+
+        document
+          .querySelectorAll('.screen')
+          .forEach(screen => screen.classList.remove('active'));
+        document.getElementById(screenName).classList.add('active');
+
+        document
+          .querySelectorAll('.nav-tab')
+          .forEach(tab => tab.classList.remove('active'));
+
+        // Find the correct tab to highlight
+        const activeTab = Array.from(
+          document.querySelectorAll('.nav-tab'),
+        ).find(
+          tab => tab.textContent.toLowerCase() === screenName.toLowerCase(),
+        );
+        if (activeTab) {
+          activeTab.classList.add('active');
+        }
+
+        // Fetch data only for relevant screens after login
+        if (currentUser && (screenName === 'home' || screenName === 'mood')) {
+          fetchMoodHistory();
+        }
+        if (currentUser && screenName === 'home') {
+          fetchGoalsHistory();
+        }
+      }
+
+      // Authentication
+      function toggleAuth() {
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+
+        if (loginForm.style.display === 'none') {
+          loginForm.style.display = 'block';
+          registerForm.style.display = 'none';
+        } else {
+          loginForm.style.display = 'none';
+          registerForm.style.display = 'block';
+        }
+      }
+
+      async function handleAuth(email, password, isRegistering = false) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/auth`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, isRegistering }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            if (!isRegistering) {
+              currentUser = { email, token: data.token };
+              subscriptionStatus = data.subscriptionStatus;
+              localStorage.setItem('token', data.token);
+              localStorage.setItem('email', email); // Save email
+              localStorage.setItem(
+                'subscriptionStatus',
+                data.subscriptionStatus,
+              );
+              showAlert('Logged in successfully!', 'success');
+
+              // Add logged-in class to the container
+              document.querySelector('.container').classList.add('logged-in');
+
+              showScreen('home');
+              updateProfileScreen();
+
+              // Fetch profile data after login
+              await fetchProfile();
+            } else {
+              showAlert('Registered successfully! Please log in.', 'success');
+              document.getElementById('registerForm').style.display = 'none';
+              document.getElementById('loginForm').style.display = 'block';
+            }
+          } else {
+            showAlert(data.error || 'Authentication failed', 'error');
+          }
+        } catch (error) {
+          console.error('Auth error:', error);
+          showAlert('Network error. Make sure backend is running.', 'error');
+        }
+      }
+
+      // Mood Tracking
+      function selectMood(mood) {
+        selectedMood = mood;
+        document
+          .querySelectorAll('.mood-button')
+          .forEach(btn => btn.classList.remove('selected'));
+        event.target.classList.add('selected');
+      }
+
+      async function saveMood() {
+        const journal = document.getElementById('journal').value;
+
+        if (!selectedMood || !journal) {
+          showAlert('Please select a mood and write a journal entry', 'error');
+          return;
+        }
+
+        if (!currentUser) {
+          showAlert('Please log in first', 'error');
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/mood`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+            body: JSON.stringify({ mood: selectedMood, journal }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            showAlert('Mood logged successfully!', 'success');
+            document.getElementById('insights').style.display = 'block';
+            document.getElementById('insightsText').textContent = data.insight;
+            fetchMoodHistory();
+            updateMoodCount();
+
+            // Clear inputs after successful submission
+            document.getElementById('journal').value = '';
+            selectedMood = null;
+            document
+              .querySelectorAll('.mood-button')
+              .forEach(btn => btn.classList.remove('selected'));
+          } else {
+            showAlert(data.error || 'Failed to log mood', 'error');
+          }
+        } catch (error) {
+          showAlert('Network error', 'error');
+        }
+      }
+
+      async function fetchMoodHistory() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/mood/history`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
+          const data = await response.json();
+
+          console.log('🔍 Mood history data received:', data);
+          console.log('📅 Sample entry:', data.history && data.history[0]);
+
+          if (!response.ok || !data.history) {
+            showAlert('Could not load mood history.');
+            return;
+          }
+
+          const historyList = document.getElementById('historyList');
+          historyList.innerHTML = '';
+
+          data.history.forEach((entry, index) => {
+            console.log(`📝 Processing entry ${index}:`, entry);
+
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.style.cssText =
+              'display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; max-width: 420px; margin: 0 auto 24px auto;';
+
+            // Top row: emoji, timestamp, buttons
+            const topRow = document.createElement('div');
+            topRow.style.cssText =
+              'display: flex; align-items: center; gap: 12px; width: 100%; justify-content: flex-start; margin-bottom: 6px;';
+
+            const emoji = document.createElement('span');
+            emoji.textContent = entry.emoji || '🙂';
+            emoji.style.fontSize = '22px';
+
+            let dateString = 'Unknown Date';
+            let date = null;
+            if (entry.createdAt) {
+              date = new Date(entry.createdAt);
+            } else if (entry.updatedAt) {
+              date = new Date(entry.updatedAt);
+            }
+            if (date && !isNaN(date.getTime())) {
+              dateString = date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+              });
+            }
+
+            const time = document.createElement('span');
+            time.textContent = dateString;
+            time.style.cssText = 'font-size: 16px; color: var(--text-primary);';
+
+            topRow.appendChild(emoji);
+            topRow.appendChild(time);
+
+            // Create Show Journal button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.textContent = 'Show Journal';
+            toggleBtn.className = 'toggle-journal-btn';
+            toggleBtn.style.cssText =
+              'padding: 8px 16px; background: var(--accent-primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease;';
+            toggleBtn.onmouseover = () =>
+              (toggleBtn.style.background = 'var(--accent-secondary)');
+            toggleBtn.onmouseout = () =>
+              (toggleBtn.style.background = 'var(--accent-primary)');
+
+            // Create Delete button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.style.cssText =
+              'margin-left: 10px; padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;';
+            deleteBtn.onclick = () => deleteMoodEntry(entry._id);
+
+            topRow.appendChild(toggleBtn);
+            topRow.appendChild(deleteBtn);
+            card.appendChild(topRow);
+
+            // Journal box (hidden by default)
+            let journalText = document.createElement('div');
+            journalText.className = 'journal-text';
+            journalText.textContent = entry.journal;
+            journalText.style.cssText =
+              'margin-top: 0; padding: 18px; background: var(--bg-secondary); border-radius: 12px; border-left: 4px solid var(--accent-secondary); font-style: italic; color: var(--text-secondary); line-height: 1.6; word-wrap: break-word; white-space: pre-wrap; min-width: 250px; max-width: 400px; width: 90vw; max-height: 250px; overflow-y: auto; box-sizing: border-box; font-size: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.13); display: flex; flex-direction: column; align-items: flex-start;';
+            journalText.style.display = 'none';
+            card.appendChild(journalText);
+
+            // Toggle logic
+            if (journalText) {
+              toggleBtn.onclick = () => {
+                if (journalText.style.display === 'none') {
+                  journalText.style.display = 'block';
+                  toggleBtn.textContent = 'Hide Journal';
+                  toggleBtn.style.background = '#4CAF50';
+                } else {
+                  journalText.style.display = 'none';
+                  toggleBtn.textContent = 'Show Journal';
+                  toggleBtn.style.background = 'var(--accent-primary)';
+                }
+              };
+            } else {
+              toggleBtn.disabled = true;
+              toggleBtn.style.opacity = 0.5;
+            }
+
+            historyList.appendChild(card);
+          });
+        } catch (error) {
+          console.error('History error:', error);
+          showAlert('Network error fetching mood history.');
+        }
+      }
+
+      async function deleteMoodEntry(id) {
+        if (!currentUser) return;
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/mood/${id}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${currentUser.token}` },
+          });
+
+          if (response.ok) {
+            showAlert('Mood entry deleted', 'success');
+            fetchMoodHistory();
+            updateMoodCount();
+          } else {
+            showAlert('Failed to delete mood', 'error');
+          }
+        } catch (error) {
+          showAlert('Network error', 'error');
+        }
+      }
+
+      function updateMoodCount() {
+        document.getElementById('moodCount').textContent = moodHistory.length;
+      }
+
+      // Mindfulness
+      function startExercise(exerciseName) {
+        if (exerciseName.includes('Premium')) {
+          showAlert('Upgrade to Premium to unlock this exercise!', 'error');
+        } else {
+          showAlert(`Starting: ${exerciseName}`, 'success');
+        }
+      }
+
+      // Community
+      function joinGroup(groupName) {
+        if (groupName.includes('Premium')) {
+          showAlert('Upgrade to Premium to join this group!', 'error');
+        } else {
+          showAlert(`Joining: ${groupName}`, 'success');
+        }
+      }
+
+      // Phone number formatting
+      function formatPhoneNumber(input) {
+        // Remove all non-digits
+        let value = input.value.replace(/\D/g, '');
+
+        // Limit to 10 digits
+        if (value.length > 10) {
+          value = value.slice(0, 10);
+        }
+
+        // Format the number
+        if (value.length >= 6) {
+          // Format: (XXX) XXX-XXXX
+          value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(
+            6,
+          )}`;
+        } else if (value.length >= 3) {
+          // Format: (XXX) XXX
+          value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+        } else if (value.length > 0) {
+          // Format: (XXX
+          value = `(${value}`;
+        }
+
+        input.value = value;
+      }
+
+      // Helper function to format phone number for display
+      function formatPhoneForDisplay(phoneNumber) {
+        if (!phoneNumber) return '';
+
+        // Remove any existing formatting
+        const cleanNumber = phoneNumber.replace(/\D/g, '');
+
+        if (cleanNumber.length === 10) {
+          return `(${cleanNumber.slice(0, 3)}) ${cleanNumber.slice(
+            3,
+            6,
+          )}-${cleanNumber.slice(6)}`;
+        } else if (cleanNumber.length > 0) {
+          return cleanNumber; // Return as-is if not 10 digits
+        }
+
+        return '';
+      }
+
+      // Age suggestion function
+      function setAge(age) {
+        document.getElementById('profileAge').value = age;
+      }
+
+      // Profile & Payments
+      async function fetchProfile() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/user`, {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+          });
+
+          if (response.ok) {
+            const responseData = await response.json();
+
+            // Handle different response formats
+            const userData = responseData.user || responseData;
+
+            currentUser = { ...currentUser, ...userData };
+
+            console.log('🔍 Fetched user data:', userData);
+            console.log(
+              '📞 Emergency Contact data:',
+              userData.emergencyContact,
+            );
+
+            // Update profile fields
+            document.getElementById('profileName').value = userData.name || '';
+            document.getElementById('profileAge').value = userData.age || '';
+            document.getElementById('profileGender').value =
+              userData.gender || '';
+
+            // Emergency contact
+            document.getElementById('emergencyName').value =
+              userData.emergencyContact?.name || '';
+            document.getElementById('emergencyRelationship').value =
+              userData.emergencyContact?.relationship || '';
+
+            // Format phone number for display
+            const phoneNumber = userData.emergencyContact?.phone || '';
+            document.getElementById('emergencyPhone').value =
+              formatPhoneForDisplay(phoneNumber);
+
+            console.log('📝 Emergency contact fields updated:');
+            console.log(
+              '  - Name field:',
+              document.getElementById('emergencyName').value,
+            );
+            console.log(
+              '  - Relationship field:',
+              document.getElementById('emergencyRelationship').value,
+            );
+            console.log(
+              '  - Phone field:',
+              document.getElementById('emergencyPhone').value,
+            );
+
+            // Preferences
+            document.getElementById('timezone').value =
+              userData.timezone || 'UTC';
+            document.getElementById('language').value =
+              userData.language || 'en';
+
+            // Privacy & notifications
+            document.getElementById('shareData').checked =
+              userData.privacySettings?.shareAnonymousData || false;
+            document.getElementById('moodReminders').checked =
+              userData.notificationPreferences?.moodReminders !== false;
+            document.getElementById('mindfulnessReminders').checked =
+              userData.notificationPreferences?.mindfulnessReminders !== false;
+            document.getElementById('weeklyInsights').checked =
+              userData.notificationPreferences?.weeklyInsights !== false;
+
+            console.log('✅ Profile fields updated with user data');
+          } else {
+            console.error('Failed to fetch profile:', response.status);
+          }
+        } catch (error) {
+          console.error('Error fetching profile:', error);
+        }
+      }
+
+      async function saveProfile() {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        let ageValue =
+          parseInt(document.getElementById('profileAge').value) || null;
+        if (ageValue !== null && (ageValue < 1 || ageValue > 120)) {
+          showAlert('Please enter a valid age between 1 and 120.', 'error');
+          return;
+        }
+
+        // Get emergency contact values
+        const emergencyName = document
+          .getElementById('emergencyName')
+          .value.trim();
+        const emergencyRelationship = document
+          .getElementById('emergencyRelationship')
+          .value.trim();
+        const emergencyPhone = document
+          .getElementById('emergencyPhone')
+          .value.replace(/\D/g, '');
+
+        console.log('📋 Emergency contact values from form:');
+        console.log('  - Name:', emergencyName);
+        console.log('  - Relationship:', emergencyRelationship);
+        console.log('  - Phone (cleaned):', emergencyPhone);
+
+        const profileData = {
+          name: document.getElementById('profileName').value,
+          age: ageValue,
+          gender: document.getElementById('profileGender').value,
+          timezone: document.getElementById('timezone').value,
+          language: document.getElementById('language').value,
+          privacySettings: {
+            shareAnonymousData: document.getElementById('shareData').checked,
+          },
+          notificationPreferences: {
+            moodReminders: document.getElementById('moodReminders').checked,
+            mindfulnessReminders: document.getElementById(
+              'mindfulnessReminders',
+            ).checked,
+            weeklyInsights: document.getElementById('weeklyInsights').checked,
+          },
         };
-        let currentGoalId = null;
 
-        // --- Dark Mode ---
-        const darkModeToggle = document.getElementById('checkbox');
-        
-        // Check for saved user preference, if any, on page load
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            darkModeToggle.checked = true;
+        // Only include emergency contact if at least one field has data
+        if (emergencyName || emergencyRelationship || emergencyPhone) {
+          profileData.emergencyContact = {
+            name: emergencyName,
+            relationship: emergencyRelationship,
+            phone: emergencyPhone,
+          };
+          console.log('✅ Including emergency contact in request');
+        } else {
+          console.log('⚠️ No emergency contact data to save');
         }
 
-        function toggleDarkMode() {
-            if (darkModeToggle.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('theme', 'light');
-            }
+        console.log('📤 Sending profile data to backend:', profileData);
+        console.log(
+          '📞 Emergency contact being sent:',
+          profileData.emergencyContact,
+        );
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/user`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(profileData),
+          });
+
+          if (response.ok) {
+            const responseData = await response.json();
+            console.log(
+              '✅ Profile saved successfully. Response:',
+              responseData,
+            );
+            showAlert('Profile saved successfully!', 'success');
+            await fetchProfile(); // Refresh profile data
+          } else {
+            console.error('❌ Failed to save profile:', response.status);
+            const errorData = await response.json();
+            console.error('❌ Error details:', errorData);
+            showAlert('Failed to save profile', 'error');
+          }
+        } catch (error) {
+          console.error('Error saving profile:', error);
+          showAlert('Error saving profile', 'error');
+        }
+      }
+
+      // Goals and AI Suggestions
+      async function getSuggestions() {
+        const goal = document.getElementById('goalInput').value.trim();
+
+        if (!goal) {
+          showAlert('Please enter your goal first.', 'error');
+          return;
         }
 
-        // Screen Navigation
-        function showScreen(screenName) {
-            // If not logged in, only allow login/register screen
-            if (!currentUser && screenName !== 'login') {
-                return; // Don't allow navigation away from login
-            }
-            
-            // Save the last visited screen so we can return to it on refresh
-            if (screenName !== 'login') {
-                localStorage.setItem('lastScreen', screenName);
-            }
+        try {
+          const response = await fetch(`${API_BASE_URL}/goals`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+            body: JSON.stringify({ goal }),
+          });
 
-            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
-            document.getElementById(screenName).classList.add('active');
-            
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            
-            // Find the correct tab to highlight
-            const activeTab = Array.from(document.querySelectorAll('.nav-tab')).find(tab => tab.textContent.toLowerCase() === screenName.toLowerCase());
-            if (activeTab) {
-                activeTab.classList.add('active');
-            }
+          if (response.ok) {
+            const data = await response.json();
+            const suggestions = data.goal.suggestions;
 
-            // Fetch data only for relevant screens after login
-            if (currentUser && (screenName === 'home' || screenName === 'mood')) {
-                fetchMoodHistory();
-            }
-            if (currentUser && screenName === 'home') {
-                fetchGoalsHistory();
-            }
+            document.getElementById('exerciseSuggestion').textContent =
+              suggestions.exercise;
+            document.getElementById('appActionSuggestion').textContent =
+              suggestions.appAction;
+            document.getElementById('messageSuggestion').textContent =
+              suggestions.message;
+
+            document.getElementById('suggestionsContainer').style.display =
+              'block';
+
+            // Store the goal ID for feedback
+            currentGoalId = data.goal._id;
+            currentGoalFeedback = {
+              exerciseRating: null,
+              appActionRating: null,
+              overallHelpful: null,
+              notes: '',
+            };
+          } else {
+            const data = await response.json();
+            showAlert(data.error || 'Failed to get suggestions', 'error');
+          }
+        } catch (error) {
+          console.error('Error getting suggestions:', error);
+          showAlert('Network error. Make sure backend is running.', 'error');
+        }
+      }
+
+      function rateSuggestion(type, rating) {
+        if (type === 'exercise') {
+          currentGoalFeedback.exerciseRating = rating;
+        } else if (type === 'appAction') {
+          currentGoalFeedback.appActionRating = rating;
         }
 
-        // Authentication
-        function toggleAuth() {
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            
-            if (loginForm.style.display === 'none') {
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-            } else {
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'block';
-            }
+        // Visual feedback
+        const buttons =
+          event.target.parentElement.querySelectorAll('.feedback-btn');
+        buttons.forEach(btn => (btn.style.opacity = '0.5'));
+        event.target.style.opacity = '1';
+      }
+
+      function rateOverall(helpful) {
+        currentGoalFeedback.overallHelpful = helpful;
+
+        // Visual feedback
+        const buttons =
+          event.target.parentElement.querySelectorAll('.feedback-btn');
+        buttons.forEach(btn => (btn.style.opacity = '0.5'));
+        event.target.style.opacity = '1';
+      }
+
+      async function saveGoal() {
+        if (!currentGoalId) {
+          showAlert('Please get suggestions first.', 'error');
+          return;
         }
 
-        async function handleAuth(email, password, isRegistering = false) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password, isRegistering })
-                });
+        const notes = document.getElementById('goalNotes').value.trim();
+        currentGoalFeedback.notes = notes;
 
-                const data = await response.json();
+        try {
+          const response = await fetch(
+            `${API_BASE_URL}/goals/${currentGoalId}/feedback`,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${currentUser.token}`,
+              },
+              body: JSON.stringify(currentGoalFeedback),
+            },
+          );
 
-                if (response.ok) {
-                    if (!isRegistering) {
-                        currentUser = { email, token: data.token };
-                        subscriptionStatus = data.subscriptionStatus;
-                        localStorage.setItem('token', data.token);
-                        localStorage.setItem('email', email); // Save email
-                        localStorage.setItem('subscriptionStatus', data.subscriptionStatus);
-                        showAlert('Logged in successfully!', 'success');
-                        
-                        // Add logged-in class to the container
-                        document.querySelector('.container').classList.add('logged-in');
-
-                        showScreen('home');
-                        updateProfileScreen();
-                        
-                        // Fetch profile data after login
-                        await fetchProfile();
-                    } else {
-                        showAlert('Registered successfully! Please log in.', 'success');
-                        document.getElementById('registerForm').style.display = 'none';
-                        document.getElementById('loginForm').style.display = 'block';
-                    }
-                } else {
-                    showAlert(data.error || 'Authentication failed', 'error');
-                }
-            } catch (error) {
-                console.error('Auth error:', error);
-                showAlert('Network error. Make sure backend is running.', 'error');
-            }
-        }
-
-        // Mood Tracking
-        function selectMood(mood) {
-            selectedMood = mood;
-            document.querySelectorAll('.mood-button').forEach(btn => btn.classList.remove('selected'));
-            event.target.classList.add('selected');
-        }
-
-        async function saveMood() {
-            const journal = document.getElementById('journal').value;
-
-            if (!selectedMood || !journal) {
-                showAlert('Please select a mood and write a journal entry', 'error');
-                return;
-            }
-
-            if (!currentUser) {
-                showAlert('Please log in first', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/mood`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentUser.token}`
-                    },
-                    body: JSON.stringify({ mood: selectedMood, journal })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    showAlert('Mood logged successfully!', 'success');
-                    document.getElementById('insights').style.display = 'block';
-                    document.getElementById('insightsText').textContent = data.insight;
-                    fetchMoodHistory();
-                    updateMoodCount();
-
-                    // Clear inputs after successful submission
-                    document.getElementById('journal').value = '';
-                    selectedMood = null;
-                    document.querySelectorAll('.mood-button').forEach(btn => btn.classList.remove('selected'));
-                } else {
-                    showAlert(data.error || 'Failed to log mood', 'error');
-                }
-            } catch (error) {
-                showAlert('Network error', 'error');
-            }
-        }
-
-        async function fetchMoodHistory() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/mood/history`, {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                });
-                const data = await response.json();
-
-                console.log('🔍 Mood history data received:', data);
-                console.log('📅 Sample entry:', data.history && data.history[0]);
-
-                if (!response.ok || !data.history) {
-                    showAlert('Could not load mood history.');
-                    return;
-                }
-
-                const historyList = document.getElementById('historyList');
-                historyList.innerHTML = ''; 
-
-                data.history.forEach((entry, index) => {
-                    console.log(`📝 Processing entry ${index}:`, entry);
-                    
-                    const card = document.createElement('div');
-                    card.className = 'history-card';
-                    card.style.cssText = 'display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; max-width: 420px; margin: 0 auto 24px auto;';
-
-                    // Top row: emoji, timestamp, buttons
-                    const topRow = document.createElement('div');
-                    topRow.style.cssText = 'display: flex; align-items: center; gap: 12px; width: 100%; justify-content: flex-start; margin-bottom: 6px;';
-
-                    const emoji = document.createElement('span');
-                    emoji.textContent = entry.emoji || '🙂';
-                    emoji.style.fontSize = '22px';
-
-                    let dateString = 'Unknown Date';
-                    let date = null;
-                    if (entry.createdAt) {
-                        date = new Date(entry.createdAt);
-                    } else if (entry.updatedAt) {
-                        date = new Date(entry.updatedAt);
-                    }
-                    if (date && !isNaN(date.getTime())) {
-                        dateString = date.toLocaleString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                    }
-
-                    const time = document.createElement('span');
-                    time.textContent = dateString;
-                    time.style.cssText = 'font-size: 16px; color: var(--text-primary);';
-
-                    topRow.appendChild(emoji);
-                    topRow.appendChild(time);
-
-                    // Create Show Journal button
-                    const toggleBtn = document.createElement('button');
-                    toggleBtn.textContent = 'Show Journal';
-                    toggleBtn.className = 'toggle-journal-btn';
-                    toggleBtn.style.cssText = 'padding: 8px 16px; background: var(--accent-primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease;';
-                    toggleBtn.onmouseover = () => toggleBtn.style.background = 'var(--accent-secondary)';
-                    toggleBtn.onmouseout = () => toggleBtn.style.background = 'var(--accent-primary)';
-
-                    // Create Delete button
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.textContent = 'Delete';
-                    deleteBtn.className = 'delete-btn';
-                    deleteBtn.style.cssText = 'margin-left: 10px; padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;';
-                    deleteBtn.onclick = () => deleteMoodEntry(entry._id);
-
-                    topRow.appendChild(toggleBtn);
-                    topRow.appendChild(deleteBtn);
-                    card.appendChild(topRow);
-
-                    // Journal box (hidden by default)
-                    let journalText = document.createElement('div');
-                    journalText.className = 'journal-text';
-                    journalText.textContent = entry.journal;
-                    journalText.style.cssText = 'margin-top: 0; padding: 18px; background: var(--bg-secondary); border-radius: 12px; border-left: 4px solid var(--accent-secondary); font-style: italic; color: var(--text-secondary); line-height: 1.6; word-wrap: break-word; white-space: pre-wrap; min-width: 250px; max-width: 400px; width: 90vw; max-height: 250px; overflow-y: auto; box-sizing: border-box; font-size: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.13); display: flex; flex-direction: column; align-items: flex-start;';
-                    journalText.style.display = 'none';
-                    card.appendChild(journalText);
-
-                    // Toggle logic
-                    if (journalText) {
-                        toggleBtn.onclick = () => {
-                            if (journalText.style.display === 'none') {
-                                journalText.style.display = 'block';
-                                toggleBtn.textContent = 'Hide Journal';
-                                toggleBtn.style.background = '#4CAF50';
-                            } else {
-                                journalText.style.display = 'none';
-                                toggleBtn.textContent = 'Show Journal';
-                                toggleBtn.style.background = 'var(--accent-primary)';
-                            }
-                        };
-                    } else {
-                        toggleBtn.disabled = true;
-                        toggleBtn.style.opacity = 0.5;
-                    }
-
-                    historyList.appendChild(card);
-                });
-            } catch (error) {
-                console.error('History error:', error);
-                showAlert('Network error fetching mood history.');
-            }
-        }
-
-        async function deleteMoodEntry(id) {
-            if (!currentUser) return;
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/mood/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${currentUser.token}` }
-                });
-
-                if (response.ok) {
-                    showAlert('Mood entry deleted', 'success');
-                    fetchMoodHistory();
-                    updateMoodCount();
-                } else {
-                    showAlert('Failed to delete mood', 'error');
-                }
-            } catch (error) {
-                showAlert('Network error', 'error');
-            }
-        }
-
-        function updateMoodCount() {
-            document.getElementById('moodCount').textContent = moodHistory.length;
-        }
-
-        // Mindfulness
-        function startExercise(exerciseName) {
-            if (exerciseName.includes('Premium')) {
-                showAlert('Upgrade to Premium to unlock this exercise!', 'error');
-            } else {
-                showAlert(`Starting: ${exerciseName}`, 'success');
-            }
-        }
-
-        // Community
-        function joinGroup(groupName) {
-            if (groupName.includes('Premium')) {
-                showAlert('Upgrade to Premium to join this group!', 'error');
-            } else {
-                showAlert(`Joining: ${groupName}`, 'success');
-            }
-        }
-
-        // Phone number formatting
-        function formatPhoneNumber(input) {
-            // Remove all non-digits
-            let value = input.value.replace(/\D/g, '');
-            
-            // Limit to 10 digits
-            if (value.length > 10) {
-                value = value.slice(0, 10);
-            }
-            
-            // Format the number
-            if (value.length >= 6) {
-                // Format: (XXX) XXX-XXXX
-                value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6)}`;
-            } else if (value.length >= 3) {
-                // Format: (XXX) XXX
-                value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
-            } else if (value.length > 0) {
-                // Format: (XXX
-                value = `(${value}`;
-            }
-            
-            input.value = value;
-        }
-
-        // Helper function to format phone number for display
-        function formatPhoneForDisplay(phoneNumber) {
-            if (!phoneNumber) return '';
-            
-            // Remove any existing formatting
-            const cleanNumber = phoneNumber.replace(/\D/g, '');
-            
-            if (cleanNumber.length === 10) {
-                return `(${cleanNumber.slice(0, 3)}) ${cleanNumber.slice(3, 6)}-${cleanNumber.slice(6)}`;
-            } else if (cleanNumber.length > 0) {
-                return cleanNumber; // Return as-is if not 10 digits
-            }
-            
-            return '';
-        }
-
-        // Age suggestion function
-        function setAge(age) {
-            document.getElementById('profileAge').value = age;
-        }
-
-        // Profile & Payments
-        async function fetchProfile() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/user`, {
-                    headers: {
-                        'Authorization': `Bearer ${currentUser.token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const responseData = await response.json();
-                    
-                    // Handle different response formats
-                    const userData = responseData.user || responseData;
-                    
-                    currentUser = { ...currentUser, ...userData };
-                    
-                    console.log('🔍 Fetched user data:', userData);
-                    console.log('📞 Emergency Contact data:', userData.emergencyContact);
-                    
-                    // Update profile fields
-                    document.getElementById('profileName').value = userData.name || '';
-                    document.getElementById('profileAge').value = userData.age || '';
-                    document.getElementById('profileGender').value = userData.gender || '';
-                    
-                    // Emergency contact
-                    document.getElementById('emergencyName').value = userData.emergencyContact?.name || '';
-                    document.getElementById('emergencyRelationship').value = userData.emergencyContact?.relationship || '';
-                    
-                    // Format phone number for display
-                    const phoneNumber = userData.emergencyContact?.phone || '';
-                    document.getElementById('emergencyPhone').value = formatPhoneForDisplay(phoneNumber);
-                    
-                    console.log('📝 Emergency contact fields updated:');
-                    console.log('  - Name field:', document.getElementById('emergencyName').value);
-                    console.log('  - Relationship field:', document.getElementById('emergencyRelationship').value);
-                    console.log('  - Phone field:', document.getElementById('emergencyPhone').value);
-                    
-                    // Preferences
-                    document.getElementById('timezone').value = userData.timezone || 'UTC';
-                    document.getElementById('language').value = userData.language || 'en';
-                    
-                    // Privacy & notifications
-                    document.getElementById('shareData').checked = userData.privacySettings?.shareAnonymousData || false;
-                    document.getElementById('moodReminders').checked = userData.notificationPreferences?.moodReminders !== false;
-                    document.getElementById('mindfulnessReminders').checked = userData.notificationPreferences?.mindfulnessReminders !== false;
-                    document.getElementById('weeklyInsights').checked = userData.notificationPreferences?.weeklyInsights !== false;
-                    
-                    console.log('✅ Profile fields updated with user data');
-                } else {
-                    console.error('Failed to fetch profile:', response.status);
-                }
-            } catch (error) {
-                console.error('Error fetching profile:', error);
-            }
-        }
-
-        async function saveProfile() {
-            const token = localStorage.getItem('token');
-            if (!token) return;
-
-            let ageValue = parseInt(document.getElementById('profileAge').value) || null;
-            if (ageValue !== null && (ageValue < 1 || ageValue > 120)) {
-                showAlert('Please enter a valid age between 1 and 120.', 'error');
-                return;
-            }
-
-            // Get emergency contact values
-            const emergencyName = document.getElementById('emergencyName').value.trim();
-            const emergencyRelationship = document.getElementById('emergencyRelationship').value.trim();
-            const emergencyPhone = document.getElementById('emergencyPhone').value.replace(/\D/g, '');
-
-            console.log('📋 Emergency contact values from form:');
-            console.log('  - Name:', emergencyName);
-            console.log('  - Relationship:', emergencyRelationship);
-            console.log('  - Phone (cleaned):', emergencyPhone);
-
-            const profileData = {
-                name: document.getElementById('profileName').value,
-                age: ageValue,
-                gender: document.getElementById('profileGender').value,
-                timezone: document.getElementById('timezone').value,
-                language: document.getElementById('language').value,
-                privacySettings: {
-                    shareAnonymousData: document.getElementById('shareData').checked
-                },
-                notificationPreferences: {
-                    moodReminders: document.getElementById('moodReminders').checked,
-                    mindfulnessReminders: document.getElementById('mindfulnessReminders').checked,
-                    weeklyInsights: document.getElementById('weeklyInsights').checked
-                }
+          if (response.ok) {
+            showAlert('Goal and feedback saved successfully!', 'success');
+            document.getElementById('suggestionsContainer').style.display =
+              'none';
+            document.getElementById('goalInput').value = '';
+            document.getElementById('goalNotes').value = '';
+            currentGoalId = null;
+            currentGoalFeedback = {
+              exerciseRating: null,
+              appActionRating: null,
+              overallHelpful: null,
+              notes: '',
             };
 
-            // Only include emergency contact if at least one field has data
-            if (emergencyName || emergencyRelationship || emergencyPhone) {
-                profileData.emergencyContact = {
-                    name: emergencyName,
-                    relationship: emergencyRelationship,
-                    phone: emergencyPhone
-                };
-                console.log('✅ Including emergency contact in request');
-            } else {
-                console.log('⚠️ No emergency contact data to save');
-            }
+            // Refresh goal history
+            await fetchGoalsHistory();
+          } else {
+            const data = await response.json();
+            showAlert(data.error || 'Failed to save goal', 'error');
+          }
+        } catch (error) {
+          console.error('Error saving goal:', error);
+          showAlert('Network error. Make sure backend is running.', 'error');
+        }
+      }
 
-            console.log('📤 Sending profile data to backend:', profileData);
-            console.log('📞 Emergency contact being sent:', profileData.emergencyContact);
+      async function fetchGoalsHistory() {
+        if (!currentUser) return;
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/user`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(profileData)
-                });
+        try {
+          const response = await fetch(`${API_BASE_URL}/goals`, {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+          });
 
-                if (response.ok) {
-                    const responseData = await response.json();
-                    console.log('✅ Profile saved successfully. Response:', responseData);
-                    showAlert('Profile saved successfully!', 'success');
-                    await fetchProfile(); // Refresh profile data
-                } else {
-                    console.error('❌ Failed to save profile:', response.status);
-                    const errorData = await response.json();
-                    console.error('❌ Error details:', errorData);
-                    showAlert('Failed to save profile', 'error');
-                }
-            } catch (error) {
-                console.error('Error saving profile:', error);
-                showAlert('Error saving profile', 'error');
-            }
+          if (response.ok) {
+            const data = await response.json();
+            goalsHistory = data.goals;
+            displayGoalsHistory();
+          } else {
+            console.error('Failed to fetch goals history:', response.status);
+          }
+        } catch (error) {
+          console.error('Error fetching goals history:', error);
+        }
+      }
+
+      function displayGoalsHistory() {
+        const container = document.getElementById('goalsHistoryList');
+
+        if (goalsHistory.length === 0) {
+          container.innerHTML =
+            '<div style="text-align: center; color: var(--text-secondary); padding: 20px;">No goals yet. Set your first goal above!</div>';
+          return;
         }
 
-        // Goals and AI Suggestions
-        async function getSuggestions() {
-            const goal = document.getElementById('goalInput').value.trim();
-            
-            if (!goal) {
-                showAlert('Please enter your goal first.', 'error');
-                return;
-            }
+        container.innerHTML = goalsHistory
+          .map(goal => {
+            const date = new Date(goal.createdAt).toLocaleDateString();
+            const feedbackStatus =
+              goal.feedback.overallHelpful !== null
+                ? goal.feedback.overallHelpful
+                  ? '✅ Helpful'
+                  : '❌ Not helpful'
+                : '🤔 No feedback';
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/goals`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentUser.token}`
-                    },
-                    body: JSON.stringify({ goal })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const suggestions = data.goal.suggestions;
-                    
-                    document.getElementById('exerciseSuggestion').textContent = suggestions.exercise;
-                    document.getElementById('appActionSuggestion').textContent = suggestions.appAction;
-                    document.getElementById('messageSuggestion').textContent = suggestions.message;
-                    
-                    document.getElementById('suggestionsContainer').style.display = 'block';
-                    
-                    // Store the goal ID for feedback
-                    currentGoalId = data.goal._id;
-                    currentGoalFeedback = {
-                        exerciseRating: null,
-                        appActionRating: null,
-                        overallHelpful: null,
-                        notes: ''
-                    };
-                } else {
-                    const data = await response.json();
-                    showAlert(data.error || 'Failed to get suggestions', 'error');
-                }
-            } catch (error) {
-                console.error('Error getting suggestions:', error);
-                showAlert('Network error. Make sure backend is running.', 'error');
-            }
-        }
-
-        function rateSuggestion(type, rating) {
-            if (type === 'exercise') {
-                currentGoalFeedback.exerciseRating = rating;
-            } else if (type === 'appAction') {
-                currentGoalFeedback.appActionRating = rating;
-            }
-            
-            // Visual feedback
-            const buttons = event.target.parentElement.querySelectorAll('.feedback-btn');
-            buttons.forEach(btn => btn.style.opacity = '0.5');
-            event.target.style.opacity = '1';
-        }
-
-        function rateOverall(helpful) {
-            currentGoalFeedback.overallHelpful = helpful;
-            
-            // Visual feedback
-            const buttons = event.target.parentElement.querySelectorAll('.feedback-btn');
-            buttons.forEach(btn => btn.style.opacity = '0.5');
-            event.target.style.opacity = '1';
-        }
-
-        async function saveGoal() {
-            if (!currentGoalId) {
-                showAlert('Please get suggestions first.', 'error');
-                return;
-            }
-
-            const notes = document.getElementById('goalNotes').value.trim();
-            currentGoalFeedback.notes = notes;
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/goals/${currentGoalId}/feedback`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentUser.token}`
-                    },
-                    body: JSON.stringify(currentGoalFeedback)
-                });
-
-                if (response.ok) {
-                    showAlert('Goal and feedback saved successfully!', 'success');
-                    document.getElementById('suggestionsContainer').style.display = 'none';
-                    document.getElementById('goalInput').value = '';
-                    document.getElementById('goalNotes').value = '';
-                    currentGoalId = null;
-                    currentGoalFeedback = {
-                        exerciseRating: null,
-                        appActionRating: null,
-                        overallHelpful: null,
-                        notes: ''
-                    };
-                    
-                    // Refresh goal history
-                    await fetchGoalsHistory();
-                } else {
-                    const data = await response.json();
-                    showAlert(data.error || 'Failed to save goal', 'error');
-                }
-            } catch (error) {
-                console.error('Error saving goal:', error);
-                showAlert('Network error. Make sure backend is running.', 'error');
-            }
-        }
-
-        async function fetchGoalsHistory() {
-            if (!currentUser) return;
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/goals`, {
-                    headers: {
-                        'Authorization': `Bearer ${currentUser.token}`
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    goalsHistory = data.goals;
-                    displayGoalsHistory();
-                } else {
-                    console.error('Failed to fetch goals history:', response.status);
-                }
-            } catch (error) {
-                console.error('Error fetching goals history:', error);
-            }
-        }
-
-        function displayGoalsHistory() {
-            const container = document.getElementById('goalsHistoryList');
-            
-            if (goalsHistory.length === 0) {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 20px;">No goals yet. Set your first goal above!</div>';
-                return;
-            }
-
-            container.innerHTML = goalsHistory.map(goal => {
-                const date = new Date(goal.createdAt).toLocaleDateString();
-                const feedbackStatus = goal.feedback.overallHelpful !== null ? 
-                    (goal.feedback.overallHelpful ? '✅ Helpful' : '❌ Not helpful') : '🤔 No feedback';
-                
-                return `
+            return `
                     <div style="background: var(--bg-primary); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid var(--accent-primary);">
-                        <div style="font-weight: bold; color: var(--text-primary); margin-bottom: 5px;">${goal.goal}</div>
+                        <div style="font-weight: bold; color: var(--text-primary); margin-bottom: 5px;">${
+                          goal.goal
+                        }</div>
                         <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">${date} • ${feedbackStatus}</div>
                         <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">
-                            <strong>Exercise:</strong> ${goal.suggestions.exercise}
+                            <strong>Exercise:</strong> ${
+                              goal.suggestions.exercise
+                            }
                         </div>
                         <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">
-                            <strong>App Action:</strong> ${goal.suggestions.appAction}
+                            <strong>App Action:</strong> ${
+                              goal.suggestions.appAction
+                            }
                         </div>
-                        ${goal.feedback.notes ? `<div style="font-size: 12px; color: var(--text-secondary); font-style: italic;">Notes: ${goal.feedback.notes}</div>` : ''}
+                        ${
+                          goal.feedback.notes
+                            ? `<div style="font-size: 12px; color: var(--text-secondary); font-style: italic;">Notes: ${goal.feedback.notes}</div>`
+                            : ''
+                        }
                         <div style="margin-top: 8px;">
-                            <button onclick="toggleGoalComplete('${goal._id}', ${!goal.completed})" style="background: ${goal.completed ? '#4CAF50' : '#2196F3'}; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-right: 5px; cursor: pointer; font-size: 12px;">
-                                ${goal.completed ? '✓ Completed' : 'Mark Complete'}
+                            <button onclick="toggleGoalComplete('${
+                              goal._id
+                            }', ${!goal.completed})" style="background: ${
+              goal.completed ? '#4CAF50' : '#2196F3'
+            }; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-right: 5px; cursor: pointer; font-size: 12px;">
+                                ${
+                                  goal.completed
+                                    ? '✓ Completed'
+                                    : 'Mark Complete'
+                                }
                             </button>
-                            <button onclick="deleteGoal('${goal._id}')" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">Delete</button>
+                            <button onclick="deleteGoal('${
+                              goal._id
+                            }')" style="background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px;">Delete</button>
                         </div>
                     </div>
                 `;
-            }).join('');
+          })
+          .join('');
+      }
+
+      async function toggleGoalComplete(goalId, completed) {
+        try {
+          const response = await fetch(
+            `${API_BASE_URL}/goals/${goalId}/complete`,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${currentUser.token}`,
+              },
+              body: JSON.stringify({ completed }),
+            },
+          );
+
+          if (response.ok) {
+            await fetchGoalsHistory();
+            showAlert(
+              `Goal ${
+                completed ? 'marked as completed' : 'marked as incomplete'
+              }!`,
+              'success',
+            );
+          } else {
+            const data = await response.json();
+            showAlert(data.error || 'Failed to update goal', 'error');
+          }
+        } catch (error) {
+          console.error('Error updating goal completion:', error);
+          showAlert('Network error. Make sure backend is running.', 'error');
         }
+      }
 
-        async function toggleGoalComplete(goalId, completed) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/goals/${goalId}/complete`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentUser.token}`
-                    },
-                    body: JSON.stringify({ completed })
-                });
+      async function deleteGoal(goalId) {
+        if (!confirm('Are you sure you want to delete this goal?')) return;
 
-                if (response.ok) {
-                    await fetchGoalsHistory();
-                    showAlert(`Goal ${completed ? 'marked as completed' : 'marked as incomplete'}!`, 'success');
-                } else {
-                    const data = await response.json();
-                    showAlert(data.error || 'Failed to update goal', 'error');
-                }
-            } catch (error) {
-                console.error('Error updating goal completion:', error);
-                showAlert('Network error. Make sure backend is running.', 'error');
-            }
+        try {
+          const response = await fetch(`${API_BASE_URL}/goals/${goalId}`, {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+          });
+
+          if (response.ok) {
+            await fetchGoalsHistory();
+            showAlert('Goal deleted successfully!', 'success');
+          } else {
+            const data = await response.json();
+            showAlert(data.error || 'Failed to delete goal', 'error');
+          }
+        } catch (error) {
+          console.error('Error deleting goal:', error);
+          showAlert('Network error. Make sure backend is running.', 'error');
         }
+      }
 
-        async function deleteGoal(goalId) {
-            if (!confirm('Are you sure you want to delete this goal?')) return;
+      // Update existing functions
+      function updateProfileScreen() {
+        document.getElementById('subscriptionStatus').textContent =
+          subscriptionStatus.toUpperCase();
+      }
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/goals/${goalId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${currentUser.token}`
-                    }
-                });
+      function logout() {
+        currentUser = null;
+        subscriptionStatus = 'free';
+        localStorage.removeItem('token');
+        localStorage.removeItem('email'); // Remove email on logout
+        localStorage.removeItem('subscriptionStatus');
+        localStorage.removeItem('lastScreen'); // Remove last screen on logout
 
-                if (response.ok) {
-                    await fetchGoalsHistory();
-                    showAlert('Goal deleted successfully!', 'success');
-                } else {
-                    const data = await response.json();
-                    showAlert(data.error || 'Failed to delete goal', 'error');
-                }
-            } catch (error) {
-                console.error('Error deleting goal:', error);
-                showAlert('Network error. Make sure backend is running.', 'error');
-            }
-        }
+        // Remove logged-in class from the container
+        document.querySelector('.container').classList.remove('logged-in');
 
-        // Update existing functions
-        function updateProfileScreen() {
-            document.getElementById('subscriptionStatus').textContent = subscriptionStatus.toUpperCase();
-        }
+        // Clear form fields
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
 
-        function logout() {
-            currentUser = null;
-            subscriptionStatus = 'free';
+        showAlert('Logged out successfully!', 'success');
+        showScreen('login');
+      }
+
+      // Utility Functions
+      function showAlert(message, type) {
+        const alert = document.getElementById('alert');
+        alert.textContent = message;
+        alert.className = `alert ${type}`;
+        alert.style.display = 'block';
+
+        setTimeout(() => {
+          alert.style.display = 'none';
+        }, 3000);
+      }
+
+      // Initialize app
+      document.addEventListener('DOMContentLoaded', async () => {
+        // Show loading state initially
+        showLoadingState();
+
+        const token = localStorage.getItem('token');
+        const email = localStorage.getItem('email');
+        const savedSubscriptionStatus =
+          localStorage.getItem('subscriptionStatus');
+
+        if (token && email) {
+          try {
+            currentUser = { email, token };
+            subscriptionStatus = savedSubscriptionStatus || 'free';
+
+            // Add logged-in class to show navigation
+            document.querySelector('.container').classList.add('logged-in');
+
+            // Fetch profile data
+            await fetchProfile();
+
+            // Show last visited screen or default to home
+            const lastScreen = localStorage.getItem('lastScreen') || 'home';
+            showScreen(lastScreen);
+          } catch (error) {
+            console.error('Error during initialization:', error);
+            // If there's an error (like invalid token), clear storage and show login
             localStorage.removeItem('token');
-            localStorage.removeItem('email'); // Remove email on logout
+            localStorage.removeItem('email');
             localStorage.removeItem('subscriptionStatus');
-            localStorage.removeItem('lastScreen'); // Remove last screen on logout
-            
-            // Remove logged-in class from the container
-            document.querySelector('.container').classList.remove('logged-in');
-            
-            // Clear form fields
-            document.getElementById('email').value = '';
-            document.getElementById('password').value = '';
-            
-            showAlert('Logged out successfully!', 'success');
+            localStorage.removeItem('lastScreen');
             showScreen('login');
+          }
+        } else {
+          showScreen('login');
         }
 
-        // Utility Functions
-        function showAlert(message, type) {
-            const alert = document.getElementById('alert');
-            alert.textContent = message;
-            alert.className = `alert ${type}`;
-            alert.style.display = 'block';
-            
-            setTimeout(() => {
-                alert.style.display = 'none';
-            }, 3000);
+        // Hide loading state
+        hideLoadingState();
+      });
+
+      function showLoadingState() {
+        // Show loading indicator
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        if (loadingIndicator) {
+          loadingIndicator.style.display = 'block';
         }
 
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Show loading state initially
-            showLoadingState();
-            
-            const token = localStorage.getItem('token');
-            const email = localStorage.getItem('email');
-            const savedSubscriptionStatus = localStorage.getItem('subscriptionStatus');
-            
-            if (token && email) {
-                try {
-                    currentUser = { email, token };
-                    subscriptionStatus = savedSubscriptionStatus || 'free';
-                    
-                    // Add logged-in class to show navigation
-                    document.querySelector('.container').classList.add('logged-in');
-                    
-                    // Fetch profile data
-                    await fetchProfile();
-                    
-                    // Show last visited screen or default to home
-                    const lastScreen = localStorage.getItem('lastScreen') || 'home';
-                    showScreen(lastScreen);
-                } catch (error) {
-                    console.error('Error during initialization:', error);
-                    // If there's an error (like invalid token), clear storage and show login
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('email');
-                    localStorage.removeItem('subscriptionStatus');
-                    localStorage.removeItem('lastScreen');
-                    showScreen('login');
-                }
-            } else {
-                showScreen('login');
-            }
-            
-            // Hide loading state
-            hideLoadingState();
-        });
+        // Hide all screens initially
+        document
+          .querySelectorAll('.screen')
+          .forEach(screen => screen.classList.remove('active'));
+      }
 
-        function showLoadingState() {
-            // Show loading indicator
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            if (loadingIndicator) {
-                loadingIndicator.style.display = 'block';
-            }
-            
-            // Hide all screens initially
-            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+      function hideLoadingState() {
+        // Hide loading indicator
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        if (loadingIndicator) {
+          loadingIndicator.style.display = 'none';
         }
-
-        function hideLoadingState() {
-            // Hide loading indicator
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            if (loadingIndicator) {
-                loadingIndicator.style.display = 'none';
-            }
-        }
+      }
     </script>
-</body>
-</html> 
+  </body>
+</html>

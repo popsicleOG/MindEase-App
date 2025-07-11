@@ -1,8 +1,38 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# MindEase - Mental Health App
 
-# Getting Started
+A comprehensive React Native application for mental health tracking, mindfulness exercises, and community support. Built with modern React Native practices and centralized API configuration.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
+
+- **Mood Tracking**: Log and visualize your daily moods
+- **Mindfulness Exercises**: Guided meditation and CBT exercises
+- **Community Support**: Connect with others in similar situations
+- **Goal Setting**: Set and track mental health goals
+- **Premium Features**: Advanced exercises and therapist-led support groups
+
+## Project Structure
+
+```
+MindEaseFrontend/
+├── src/
+│   ├── screens/           # All screen components
+│   │   ├── HomeScreen.js
+│   │   ├── LoginScreen.js
+│   │   ├── MoodTrackerScreen.js
+│   │   ├── MindfulnessScreen.js
+│   │   ├── CommunityHubScreen.js
+│   │   └── ProfileScreen.js
+│   └── config/
+│       └── api.js         # Centralized API configuration
+├── __tests__/             # Comprehensive test suite
+├── android/               # Android native code
+├── ios/                   # iOS native code
+└── package.json
+```
+
+## Getting Started
+
+> **Note**: Make sure you have completed the [React Native Environment Setup](https://reactnative.dev/docs/environment-setup) guide before proceeding.
 
 ## Step 1: Start Metro
 
@@ -62,25 +92,56 @@ If everything is set up correctly, you should see your new app running in the An
 
 This is one way to run your app — you can also build it directly from Android Studio or Xcode.
 
-## Step 3: Modify your app
+## Step 3: Development
 
-Now that you have successfully run the app, let's make changes!
+### API Configuration
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+The app uses centralized API configuration in `src/config/api.js`. This ensures consistent API endpoints across all screens and makes environment switching seamless.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### Testing
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+Run the comprehensive test suite:
+
+```sh
+npm test
+```
+
+The test suite includes:
+
+- **API Configuration Tests**: Validate API endpoints and authentication
+- **Screen Component Tests**: Test rendering and user interactions
+- **Integration Tests**: Test API calls and data flow
+
+### Code Quality
+
+The project follows modern React Native best practices:
+
+- Centralized API configuration
+- Comprehensive test coverage
+- Clean component structure
+- Environment-based configuration
+
+## API Integration
+
+The backend API runs on `http://localhost:5000` in development. All API calls use the centralized configuration in `src/config/api.js` for consistency and maintainability.
+
+## Development Workflow
+
+1. **Start the backend server** (see backend README)
+2. **Start Metro**: `npm start`
+3. **Run on device/emulator**: `npm run android` or `npm run ios`
+4. **Run tests**: `npm test`
 
 ## Congratulations! :tada:
 
-You've successfully run and modified your React Native App. :partying_face:
+You've successfully set up the MindEase React Native app! :partying_face:
 
-### Now what?
+### Next Steps
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+- Explore the screen components in `src/screens/`
+- Review the API configuration in `src/config/api.js`
+- Run the test suite to ensure everything works
+- Check out the backend integration
 
 # Troubleshooting
 
