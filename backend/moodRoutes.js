@@ -41,9 +41,9 @@ router.get('/history', authenticateToken, async (req, res) => {
     const { startDate, endDate } = req.query;
     const query = { userId };
     if (startDate && endDate) {
-      query.timestamp = { $gte: new Date(startDate), $lte: new Date(endDate) };
+      query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
     }
-    const moodHistory = await Mood.find(query).sort({ timestamp: -1 }).limit(50);
+    const moodHistory = await Mood.find(query).sort({ createdAt: -1 }).limit(50);
     res.status(200).json({ message: 'Mood history retrieved successfully', history: moodHistory });
   } catch (error) {
     console.error('Error retrieving mood history:', error);

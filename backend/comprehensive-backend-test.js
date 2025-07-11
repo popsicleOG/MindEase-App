@@ -54,7 +54,7 @@ async function testMoodLogging() {
     }, {
       headers: { Authorization: `Bearer ${authToken}` }
     });
-    moodId = response.data.mood._id;
+    moodId = response.data.moodEntry._id;
     console.log('✅ Mood logged successfully');
     console.log('🤖 AI Insight:', response.data.insight);
     return true;

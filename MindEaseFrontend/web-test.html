@@ -934,8 +934,6 @@
                         date = new Date(entry.createdAt);
                     } else if (entry.updatedAt) {
                         date = new Date(entry.updatedAt);
-                    } else if (entry.timestamp) {
-                        date = new Date(entry.timestamp);
                     }
                     if (date && !isNaN(date.getTime())) {
                         dateString = date.toLocaleString('en-US', {

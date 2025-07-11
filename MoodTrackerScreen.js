@@ -108,7 +108,7 @@ const MoodTrackerScreen = () => {
         <Text style={styles.historyHeader}>Mood History</Text>
         {history.map((entry) => (
           <View key={entry._id} style={styles.historyItem}>
-            <Text>{entry.mood} - {new Date(entry.timestamp).toLocaleDateString()}</Text>
+            <Text>{entry.mood} - {new Date(entry.createdAt).toLocaleDateString()}</Text>
             <TouchableOpacity onPress={() => handleDeleteMood(entry._id)}>
               <Text style={styles.deleteText}>Delete</Text>
             </TouchableOpacity>

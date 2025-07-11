@@ -237,7 +237,11 @@ cd backend && npm start
 - `DELETE /mood/:id` - Delete mood entry
 
 ### Goals & Suggestions
-- `
+- `POST /goals` - Create new goal with AI suggestions
+- `GET /goals` - Get user goals and suggestions
+- `PUT /goals/:id` - Update goal with feedback
+- `DELETE /goals/:id` - Delete goal
+- `POST /goals/:id/complete` - Mark goal as completed
 
 ## 🚀 Features
 
